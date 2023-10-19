@@ -1,0 +1,27 @@
+.button {
+   box-sizing: border-box;
+   border: 1px solid #775ce5;
+   border-radius: 12px;
+   background: #775ce5;
+   color: #fff;
+   padding: 19px;
+   font-size: 16px;
+   line-height: 100%;
+   cursor: pointer;
+   width: 100%;
+}
+
+.button--outline {
+   background-color: transparent;
+   color: #775ce5;
+   transition-property: color background-color;
+   transition-duration: 1s;
+}
+
+.button--outline:hover {
+   background: #775ce5;
+   color: #fff;
+}
+
+.button--disabled {
+}

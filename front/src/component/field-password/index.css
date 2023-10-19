@@ -1,0 +1,59 @@
+.field {
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
+}
+
+.field__label {
+   color: rgb(128, 128, 128);
+   font-size: 14px;
+}
+
+.field__input {
+   width: 100%;
+   border: 1px solid #e9e8eb;
+   border-radius: 10px;
+   background: white;
+   padding: 16px;
+   color: #1d1d1f;
+   transition: border-color 0.3s;
+}
+.field__input::placeholder {
+   color: #1d1d1f;
+   font-size: 14px;
+}
+.field__input:hover {
+   border-color: #775ce5;
+}
+
+.field__input:focus {
+   border-color: #775ce5;
+}
+
+.field__wrapper {
+   width: 100%;
+   display: grid;
+   position: relative;
+}
+
+.field__icon {
+   display: block;
+   width: 20px;
+   height: 20px;
+   cursor: pointer;
+   background-size: cover;
+   position: absolute;
+   right: 16px;
+   top: calc(50% - 10px);
+   z-index: 1;
+}
+.field__icon-2 {
+   background-image: url("../../../public/svg/eye-off.svg");
+}
+.field__icon-1 {
+   background-image: url("../../../public/svg/eye-show.svg");
+}
+
+.field__input {
+   padding-right: calc(16px + 20px + 16px);
+}
