@@ -210,6 +210,50 @@ router.post('/signup-confirm', function (req, res) {
   }
 })
 // =============================================
+router.post('/auth-confirm', function (req, res) {
+  const { token, user } = req.body
+
+  if (!user || !token) {
+    return res.status(400).json({
+      message: "Помилка. Обов'язкові поля відсутні",
+    })
+  }
+
+  try {
+    const session = Session.get(token)
+    console.log(session)
+
+    if (!session) {
+      return res.status(400).json({
+        message: 'Помилка. Токен відсутній в системі',
+      })
+    }
+
+    const userData = User.getByEmail(user.email)
+    if (userData) {
+      return res.status(400).json({
+        message: 'Помилка. Користувача не існує',
+      })
+    }
+
+    if (
+      user.email !== session.user.email ||
+      user.email !== userData.email
+    ) {
+      return res.status(400).json({
+        message: 'Увага. Несанкціонований вхід',
+      })
+    }
+
+    return res.status(200).json({
+      message: 'Вхід дозволено',
+      session,
+    })
+    // ...
+  } catch (error) {
+    return res.status(400).json({ massage: error.message })
+  }
+})
 
 router.post('/signin', function (req, res) {
   let { email, password } = req.body

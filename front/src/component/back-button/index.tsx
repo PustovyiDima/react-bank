@@ -1,10 +1,13 @@
 import "./index.css";
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../App";
+import { SESSION_KEY } from "../../utils/session";
 
 const BackBtn = () => {
    const navigate = useNavigate();
    const handleClick = () => navigate(-1);
+
    return (
       <div
          onClick={handleClick}

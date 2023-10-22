@@ -1,31 +1,91 @@
-import { useCallback, useContext, createElement } from "react";
+import {
+   useCallback,
+   useContext,
+   createElement,
+   useEffect,
+   useState,
+   useReducer,
+} from "react";
 import { AuthContext } from "../App";
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
-const PrivateRoute = ({ children }: any) => {
-   const navigate = useNavigate();
+type User = {
+   token: string;
+   user: {
+      email: string;
+      isConfirm: boolean;
+      id: number;
+   };
+};
+
+const checkAuth = async (user: User) => {
+   const convertData = (data: User) => {
+      return JSON.stringify({
+         token: user.token,
+         user: {
+            email: user.user.email,
+            isConfirm: user.user.isConfirm,
+            id: user.user.id,
+         },
+      });
+   };
+   try {
+      const res = await fetch("http://localhost:4000/auth-confirm", {
+         method: "POST",
+         headers: { "Content-Type": "application/json" },
+         body: convertData(user),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+         return true;
+      } else {
+         console.log(data.message, "error");
+         return false;
+      }
+   } catch (error) {
+      const message = "Не можливо підключитись";
+
+      console.log(message);
+
+      return false;
+   }
+};
+
+const PrivateRoute = ({ children }: JSX.ElementType | any) => {
    const user = useContext(AuthContext);
-   console.log("private", user);
-   console.log(window.location.pathname);
+   const [res, setRes] = useState(false);
+   const user1: User = user.userState;
+   // let res = await checkAuth(user1);
+
+   user1.token ? setRes(true) : setRes(false);
+
+   console.log(res, user1.token);
 
    if (
-      user.userState.token &&
-      !user.userState.user.isConfirm &&
+      res &&
+      user1.token &&
+      !user1.user.isConfirm &&
       window.location.pathname === "/signup-confirm"
    ) {
       console.log("Render Children signup-confirm element");
       return <>{children}</>;
    }
-   if (user.userState.token && !user.userState.user.isConfirm) {
+   if (
+      res &&
+      user1.token &&
+      !user1.user.isConfirm &&
+      window.location.pathname !== "/signup-confirm"
+   ) {
       console.log("Navigate signup-confirm");
-      return <Navigate to="/signup-confirm" />;
+      return <Navigate to="/signup-confirm" replace />;
    }
-   if (user.userState.token && user.userState.user.isConfirm) {
+   if (res && user1.token && user1.user.isConfirm) {
       console.log("Render Children element");
       return <>{children}</>;
    } else {
-      console.log("Navigate welcome");
-      return <Navigate to="/" />;
+      return <Navigate to="/" replace />;
    }
 };
 export default PrivateRoute;

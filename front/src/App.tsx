@@ -121,6 +121,13 @@ export const AuthContext = createContext(initState);
 // };
 
 function App() {
+   // useEffect(() => {
+   //    const session = getSession();
+   //    if (session) {
+   //       console.log("LOGIN", session);
+   //       authDisp("LOGIN", session);
+   //    }
+   // }, []);
    const initState: InitialState = {
       token: undefined,
       user: {
@@ -147,15 +154,18 @@ function App() {
       initializer
    );
 
-   const authDisp = useCallback((type: string, session?: InitialState) => {
-      console.log(type, type === ACTION_TYPE.LOGIN);
-      if (type === ACTION_TYPE.LOGIN) {
-         dispach({ type: ACTION_TYPE.LOGIN, payload: session });
-      }
-      if (type === ACTION_TYPE.LOGOUT) {
-         dispach({ type: ACTION_TYPE.LOGOUT });
-      }
-   }, []);
+   const authDisp = useCallback(
+      (type: string, session?: InitialState) => {
+         console.log(type, type === ACTION_TYPE.LOGIN);
+         if (type === ACTION_TYPE.LOGIN) {
+            dispach({ type: ACTION_TYPE.LOGIN, payload: session });
+         }
+         if (type === ACTION_TYPE.LOGOUT) {
+            dispach({ type: ACTION_TYPE.LOGOUT });
+         }
+      },
+      [userState]
+   );
 
    const authContextData = {
       userState: userState,
@@ -185,11 +195,7 @@ function App() {
                />
                <Route
                   path="/signup-confirm/*"
-                  element={
-                     <PrivateRoute>
-                        <SignupConfirmPage />
-                     </PrivateRoute>
-                  }
+                  element={<PrivateRoute>{<SignupConfirmPage />}</PrivateRoute>}
                />
                <Route
                   path="/signin"

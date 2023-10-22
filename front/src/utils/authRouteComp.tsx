@@ -7,16 +7,22 @@ const AuthRoute = ({ children }: any) => {
    const user = useContext(AuthContext);
    console.log("auth", user);
 
-   const session = getSession();
-   if (session) {
-      console.log("LOGIN", session);
-      user.authDisp("LOGIN", session);
-   }
+   useCallback(() => {
+      const session = getSession();
+
+      if (session) {
+         console.log("LOGIN", session);
+         user.authDisp("LOGIN", session);
+      }
+   }, [user.userState.token]);
 
    return user.userState.token ? (
-      <Navigate to="/balance" />
+      <>
+         <Navigate to="/balance" replace />
+      </>
    ) : (
       createElement(children.type)
    );
 };
+
 export default AuthRoute;

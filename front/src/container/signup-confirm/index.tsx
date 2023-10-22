@@ -10,7 +10,12 @@ import Button from "../../component/button";
 import Alert from "../../component/alert";
 
 import { useNavigate, Link, useParams } from "react-router-dom";
-import { getSession, getTokenSession, saveSession } from "../../utils/session";
+import {
+   getSession,
+   getTokenSession,
+   removeSession,
+   saveSession,
+} from "../../utils/session";
 
 import { Form, REG_EXP_EMAIL, REG_EXP_PASSWORD } from "../../utils/form";
 
@@ -173,7 +178,8 @@ export default function Container() {
                type: REQUEST_ACTION_TYPE.ERROR,
                payload: data.message,
             });
-            console.log("error");
+            userSession.authDisp("LOGOUT");
+            console.log(data.message, "error");
          }
       } catch (error) {
          const message = "Не можливо підключитись";

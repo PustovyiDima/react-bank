@@ -44,3 +44,12 @@ export const getSession = () => {
       return null;
    }
 };
+
+export const removeSession = (session) => {
+   try {
+      return localStorage.removeItem(SESSION_KEY);
+   } catch (error) {
+      console.log(error);
+      return null;
+   }
+};

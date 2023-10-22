@@ -30,7 +30,7 @@ class SignUpForm extends Form {
    FIELD_NAME = {
       EMAIL: "email",
       PASSWORD: "password",
-      // PASSWORD_AGAIN: "password_again",
+      PASSWORD_AGAIN: "password_again",
    };
 
    FIELD_ERROR = {
@@ -59,23 +59,31 @@ class SignUpForm extends Form {
          if (!REG_EXP_PASSWORD.test(String(value)))
             return this.FIELD_ERROR.PASSWORD;
       }
-      // if (name === this.FIELD_NAME.PASSWORD_AGAIN) {
-      //    if (String(value) !== this.values[this.FIELD_NAME.PASSWORD])
-      //       return this.FIELD_ERROR.PASSWORD_AGAIN;
-      // }
+      if (name === this.FIELD_NAME.PASSWORD_AGAIN) {
+         if (String(value) !== this.values[this.FIELD_NAME.PASSWORD])
+            return this.FIELD_ERROR.PASSWORD_AGAIN;
+      }
       return undefined;
    };
 }
 const signUpForm = new SignUpForm();
 
 type InitialState = {
-   names: { email: ""; password: "" };
-   errors: { email: ""; password: "" };
+   names: { email: ""; password: ""; password_again: "" };
+   errors: { email: ""; password: ""; password_again: "" };
 };
 
 type State = {
-   names: { email: string | null; password: string | null };
-   errors: { email: string | undefined; password: string | undefined };
+   names: {
+      email: string | null;
+      password: string | null;
+      password_again: string | null;
+   };
+   errors: {
+      email: string | undefined;
+      password: string | undefined;
+      password_again: string | undefined;
+   };
 };
 
 type Action = {
@@ -87,6 +95,7 @@ type Action = {
 enum ACTION_TYPE {
    CHANGE_EMAIL = "CHANGE_EMAIL",
    CHANGE_PASSWORD = "CHANGE_PASSWORD",
+   CHANGE_PASSWORD_AGAIN = "CHANGE_PASSWORD_AGAIN",
 
    VALIDATE_ALL = "VALIDATE_ALL",
    SUBMIT = "SUBMIT",
@@ -112,6 +121,11 @@ const stateReducer: React.Reducer<State, Action> = (
          errors.password = error;
          names.password = value;
          return { ...state, names: names, errors: errors };
+      case ACTION_TYPE.CHANGE_PASSWORD_AGAIN:
+         signUpForm.change("password_again", value);
+         errors.password_again = error;
+         names.password_again = value;
+         return { ...state, names: names, errors: errors };
       case ACTION_TYPE.VALIDATE_ALL:
          const res: boolean = signUpForm.validateAll();
          console.log(res);
@@ -129,14 +143,14 @@ const stateReducer: React.Reducer<State, Action> = (
 export default function Container() {
    const navigate = useNavigate();
    const initState: InitialState = {
-      names: { email: "", password: "" },
-      errors: { email: "", password: "" },
+      names: { email: "", password: "", password_again: "" },
+      errors: { email: "", password: "", password_again: "" },
    };
 
    const initializer = (state: InitialState): State => ({
       ...state,
-      names: { email: "", password: "" },
-      errors: { email: "", password: "" },
+      names: { email: "", password: "", password_again: "" },
+      errors: { email: "", password: "", password_again: "" },
    });
 
    const [state, dispach] = React.useReducer(
@@ -164,6 +178,13 @@ export default function Container() {
       if (e.target.name === "password") {
          dispach({
             type: ACTION_TYPE.CHANGE_PASSWORD,
+            payload: e.target.value,
+            error: error,
+         });
+      }
+      if (e.target.name === "password_again") {
+         dispach({
+            type: ACTION_TYPE.CHANGE_PASSWORD_AGAIN,
             payload: e.target.value,
             error: error,
          });
@@ -214,7 +235,7 @@ export default function Container() {
             userSession.authDisp("LOGIN", data.session);
 
             const user = data.session.user.email;
-            navigate(`/signup-confirm/:${user}`);
+            navigate(`/signup-confirm`, { replace: true });
          } else {
             dispachServer({
                type: REQUEST_ACTION_TYPE.ERROR,
@@ -274,6 +295,15 @@ export default function Container() {
                      type="password"
                      name="password"
                      error={state.errors.password}
+                  />
+               </div>
+               <div className="form__item">
+                  <FieldPassword
+                     action={handleInput}
+                     label="Password again"
+                     type="password"
+                     name="password_again"
+                     error={state.errors.password_again}
                   />
                </div>
 
