@@ -9,7 +9,7 @@ const AuthRoute = ({ children }: any) => {
 
    const session = getSession();
    if (session) {
-      //   console.log(session);
+      console.log("LOGIN", session);
       user.authDisp("LOGIN", session);
    }
 

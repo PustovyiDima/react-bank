@@ -167,7 +167,7 @@ export default function Container() {
             dispachServer({ type: REQUEST_ACTION_TYPE.SUCCESS });
             saveSession(data.session);
             userSession.authDisp("LOGIN", data.session);
-            // navigate(`/balance`);
+            navigate(`/balance`, { replace: true });
          } else {
             dispachServer({
                type: REQUEST_ACTION_TYPE.ERROR,

@@ -37,8 +37,7 @@ export const getTokenSession = () => {
 
 export const getSession = () => {
    try {
-      const session =
-         JSON.parse(localStorage.getItem(SESSION_KEY)) || window.session;
+      const session = JSON.parse(localStorage.getItem(SESSION_KEY)) || null;
       return session ? session : null;
    } catch (error) {
       console.log(error);
