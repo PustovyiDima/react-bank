@@ -5,10 +5,16 @@ type ComponentProps = {
    name: string;
    label: string;
    type: string;
-   action?: string;
+   action?: React.ChangeEventHandler<HTMLInputElement>;
+   error: string | undefined;
 };
-const Component: React.FC<ComponentProps> = ({ name, label, type }) => {
-   const handleInput = () => {};
+const Component: React.FC<ComponentProps> = ({
+   name,
+   label,
+   type,
+   action,
+   error,
+}) => {
    const [viewPassword, setPassword] = React.useState<boolean>(false);
 
    const handleToggle: React.MouseEventHandler<HTMLElement> = (
@@ -19,6 +25,12 @@ const Component: React.FC<ComponentProps> = ({ name, label, type }) => {
 
    let toogleType = viewPassword ? "text" : type;
    let iconType = viewPassword ? "field__icon-1" : "field__icon-2";
+
+   // const handleInput: React.ChangeEventHandler<HTMLInputElement> | undefined = (
+   //    e
+   // ) => {
+   //    console.log(e.target.name, e.target.value);
+   // };
 
    return (
       <div>
@@ -32,7 +44,7 @@ const Component: React.FC<ComponentProps> = ({ name, label, type }) => {
                   id={name}
                   className="field__input validation"
                   type={toogleType}
-                  onInput={handleInput}
+                  onChange={action}
                />
                <span
                   onClick={handleToggle}
@@ -40,9 +52,11 @@ const Component: React.FC<ComponentProps> = ({ name, label, type }) => {
                ></span>
             </div>
          </div>
-         {/* <span name="email" class="form__error">
-            Помилка
-         </span> */}
+         {error && (
+            <span id={`${name}--error`} className="form__error">
+               {error}
+            </span>
+         )}
       </div>
    );
 };

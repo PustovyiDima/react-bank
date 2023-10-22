@@ -6,15 +6,17 @@ type ComponentProps = {
    label: string;
    type: string;
    placeholder?: string;
-   action?: string;
+   action?: React.ChangeEventHandler<HTMLInputElement>;
+   error?: string | undefined;
 };
 const Component: React.FC<ComponentProps> = ({
    name,
    label,
    type,
    placeholder,
+   action,
+   error,
 }) => {
-   const handleInput = () => {};
    return (
       <div>
          <div className="field">
@@ -27,13 +29,15 @@ const Component: React.FC<ComponentProps> = ({
                className="field__input validation"
                type={type}
                placeholder={placeholder}
-               onInput={handleInput}
+               onInput={action}
             />
             {/* oninput="{{action}}(this.name,this.value)" */}
          </div>
-         {/* <span name="email" class="form__error">
-            Помилка
-         </span> */}
+         {error && (
+            <span id={`${name}--error`} className="form__error">
+               {error}
+            </span>
+         )}
       </div>
    );
 };

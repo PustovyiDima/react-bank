@@ -1,0 +1,48 @@
+.form {
+   padding: 0 20px;
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+}
+.form__error--active {
+   font-size: 12px;
+}
+
+.form__error--active {
+   color: red;
+}
+
+.alert {
+   padding: 12px 16px;
+   border-radius: 10px;
+   border: 1px solid transparent;
+   font-size: 14px;
+}
+
+.alert--success {
+   border-color: green;
+   color: green;
+}
+
+.alert--error {
+   border-color: red;
+   color: red;
+}
+
+.alert--progress {
+   border-color: blue;
+   color: blue;
+}
+
+.alert--disabled {
+   display: none;
+}
+
+.validation--active {
+   color: red !important;
+}
+
+.link {
+   color: cornflowerblue;
+   font-size: 16px;
+}

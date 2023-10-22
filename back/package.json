@@ -10,6 +10,7 @@
     "@babel/core": "^7.21.0",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.5",
+    "concurrently": "^8.2.0",
     "connect-livereload": "^0.6.1",
     "cookie-parser": "~1.4.4",
     "css-loader": "^6.7.1",
@@ -22,6 +23,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "express": "~4.16.1",
     "express-handlebars": "^6.0.7",
+    "glob": "^10.3.3",
     "hbs": "~4.0.4",
     "http-errors": "~1.6.3",
     "livereload": "^0.9.3",
@@ -34,10 +36,10 @@
     "style-loader": "^3.3.1",
     "webpack": "^5.88.2",
     "webpack-cli": "^4.9.2",
-    "concurrently": "^8.2.0",
-    "glob": "^10.3.3",
     "webpack-dev-middleware": "^6.1.1",
     "webpack-hot-middleware": "^2.25.4"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/node": "^20.8.7"
+  }
 }

@@ -1,0 +1,10 @@
+.welcome-page {
+   padding-bottom: 20px;
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   margin: auto;
+   gap: 80px;
+   
+   min-height: 400px;
+}
