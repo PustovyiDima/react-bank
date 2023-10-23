@@ -119,7 +119,61 @@ export const AuthContext = createContext(initState);
 //       return <Navigate to="/" />;
 //    }
 // };
+// ==================================================================
+// type User = {
+//    token: string;
+//    user: {
+//       email: string;
+//       isConfirm: boolean;
+//       id: number;
+//    };
+// };
 
+// const checkAuth = async (user: User) => {
+//    const convertData = (data: User) => {
+//       return JSON.stringify({
+//          token: user.token,
+//          user: {
+//             email: user.user.email,
+//             isConfirm: user.user.isConfirm,
+//             id: user.user.id,
+//          },
+//       });
+//    };
+//    try {
+//       const res = await fetch("http://localhost:4000/auth-confirm", {
+//          method: "POST",
+//          headers: { "Content-Type": "application/json" },
+//          body: convertData(user),
+//       });
+
+//       const data = await res.json();
+
+//       if (res.ok) {
+//          return true;
+//       } else {
+//          console.log(data.message, "error");
+//          return false;
+//       }
+//    } catch (error) {
+//       const message = "Не можливо підключитись";
+
+//       console.log(message);
+
+//       return false;
+//    }
+// };
+
+// const AuthConfirm = async () => {
+//    const session = getSession();
+//    const user = useContext(AuthContext);
+//    const result = await checkAuth(session);
+//    if (!checkAuth(session)) {
+//       user.authDisp({ type: ACTION_TYPE.LOGOUT });
+//    }
+
+// };
+// =========================================================================
 function App() {
    // useEffect(() => {
    //    const session = getSession();
@@ -128,6 +182,7 @@ function App() {
    //       authDisp("LOGIN", session);
    //    }
    // }, []);
+
    const initState: InitialState = {
       token: undefined,
       user: {
