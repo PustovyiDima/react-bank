@@ -94,94 +94,9 @@ const initState: any = {
 };
 export const AuthContext = createContext(initState);
 
-// const AuthRoute = ({ children }: any) => {
-//    const user = useContext(AuthContext);
-//    console.log("auth", user);
-
-//    return user.userState.token ? (
-//       <Navigate to="/balance" />
-//    ) : (
-//       createElement(children.type)
-//    );
-// };
-
-// const PrivateRoute = ({ children }: any) => {
-//    const user = useContext(AuthContext);
-//    console.log("private", user);
-//    console.log(window.location.pathname);
-
-//    // if (user.userState.token && !user.userState.user.isConfirm) {
-//    //    return <Navigate to="/signup-confirm" replace />;
-//    // }
-//    if (user.userState.token && user.userState.user.isConfirm) {
-//       return <>{children}</>;
-//    } else {
-//       return <Navigate to="/" />;
-//    }
-// };
-// ==================================================================
-// type User = {
-//    token: string;
-//    user: {
-//       email: string;
-//       isConfirm: boolean;
-//       id: number;
-//    };
-// };
-
-// const checkAuth = async (user: User) => {
-//    const convertData = (data: User) => {
-//       return JSON.stringify({
-//          token: user.token,
-//          user: {
-//             email: user.user.email,
-//             isConfirm: user.user.isConfirm,
-//             id: user.user.id,
-//          },
-//       });
-//    };
-//    try {
-//       const res = await fetch("http://localhost:4000/auth-confirm", {
-//          method: "POST",
-//          headers: { "Content-Type": "application/json" },
-//          body: convertData(user),
-//       });
-
-//       const data = await res.json();
-
-//       if (res.ok) {
-//          return true;
-//       } else {
-//          console.log(data.message, "error");
-//          return false;
-//       }
-//    } catch (error) {
-//       const message = "Не можливо підключитись";
-
-//       console.log(message);
-
-//       return false;
-//    }
-// };
-
-// const AuthConfirm = async () => {
-//    const session = getSession();
-//    const user = useContext(AuthContext);
-//    const result = await checkAuth(session);
-//    if (!checkAuth(session)) {
-//       user.authDisp({ type: ACTION_TYPE.LOGOUT });
-//    }
-
-// };
 // =========================================================================
 function App() {
-   // useEffect(() => {
-   //    const session = getSession();
-   //    if (session) {
-   //       console.log("LOGIN", session);
-   //       authDisp("LOGIN", session);
-   //    }
-   // }, []);
+   const session = getSession();
 
    const initState: InitialState = {
       token: undefined,
@@ -225,6 +140,49 @@ function App() {
    const authContextData = {
       userState: userState,
       authDisp: authDisp,
+   };
+   const token = null;
+   console.log(session);
+   if (session !== null) {
+      const token = session.token;
+   }
+
+   useEffect(() => {
+      if (token && token != null) {
+         sendRequest(token, session.user.email);
+      }
+   }, []);
+
+   const convertData = (token: string, email: string) => {
+      return JSON.stringify({
+         token: token,
+         email: email,
+      });
+   };
+
+   const sendRequest = async (token: string, email: string) => {
+      try {
+         const res = await fetch("http://localhost:4000/auth-confirm", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: convertData(token, email),
+         });
+
+         const data = await res.json();
+
+         if (res.ok) {
+            return true;
+         } else {
+            console.log(data.message, "error");
+            authDisp("LOGOUT");
+         }
+      } catch (error) {
+         const message = "Не можливо підключитись";
+
+         console.log(message);
+
+         authDisp("LOGOUT");
+      }
    };
 
    return (

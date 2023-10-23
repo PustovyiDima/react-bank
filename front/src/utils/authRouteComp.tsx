@@ -7,14 +7,15 @@ const AuthRoute = ({ children }: any) => {
    const user = useContext(AuthContext);
    console.log("auth", user);
 
-   useCallback(() => {
+   useEffect(() => {
       const session = getSession();
+      console.log(session);
 
       if (session) {
          console.log("LOGIN", session);
          user.authDisp("LOGIN", session);
       }
-   }, [user.userState.token]);
+   }, []);
 
    return user.userState.token ? (
       <>

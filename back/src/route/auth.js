@@ -136,8 +136,8 @@ router.post('/recovery-confirm', function (req, res) {
 })
 
 // =============================================
-router.get('/signup-confirm', function (req, res) {
-  const { renew, email } = req.query
+router.post('/signup-confirm/renew', function (req, res) {
+  const { renew, email } = req.body
 
   if (!renew || !email) {
     return res.status(400).json({
@@ -211,9 +211,10 @@ router.post('/signup-confirm', function (req, res) {
 })
 // =============================================
 router.post('/auth-confirm', function (req, res) {
-  const { token, user } = req.body
+  const { token, email } = req.body
+  console.log(token, email)
 
-  if (!user || !token) {
+  if (!email || !token) {
     return res.status(400).json({
       message: "Помилка. Обов'язкові поля відсутні",
     })
@@ -221,25 +222,23 @@ router.post('/auth-confirm', function (req, res) {
 
   try {
     const session = Session.get(token)
-    console.log(session)
+    console.log('serverAuth', session)
 
     if (!session) {
       return res.status(400).json({
         message: 'Помилка. Токен відсутній в системі',
       })
     }
+    console.log(session.user.email)
+    const userData = User.getByEmail(email)
 
-    const userData = User.getByEmail(user.email)
-    if (userData) {
+    if (!userData) {
       return res.status(400).json({
         message: 'Помилка. Користувача не існує',
       })
     }
 
-    if (
-      user.email !== session.user.email ||
-      user.email !== userData.email
-    ) {
+    if (session.user.email !== userData.email) {
       return res.status(400).json({
         message: 'Увага. Несанкціонований вхід',
       })
@@ -251,7 +250,9 @@ router.post('/auth-confirm', function (req, res) {
     })
     // ...
   } catch (error) {
-    return res.status(400).json({ massage: error.message })
+    return res
+      .status(400)
+      .json({ massage: 'ServerRequestError' })
   }
 })
 

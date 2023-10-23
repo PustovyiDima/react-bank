@@ -95,15 +95,14 @@ const stateReducer: React.Reducer<State, Action> = (
 export default function Container() {
    const navigate = useNavigate();
    let userSession = useContext(AuthContext);
-   const session: {
-      token: string;
-      user: { email: string; isConfirm: boolean; id: number };
-   } = getSession();
-   if (session.user.isConfirm) {
-      navigate("/balance");
-   }
+   const session = getSession();
+   // if (userSession.userState.user.isConfirm) {
+   //    navigate("/balance");
+   // }
 
-   // console.log(session);
+   console.log(session, "session");
+
+   console.log(userSession, "userSession");
 
    const initState: InitialState = {
       code: null,
@@ -153,7 +152,16 @@ export default function Container() {
    // ==========
 
    const convertData = (data: { code: number }) => {
-      return JSON.stringify({ code: data.code, token: session.token });
+      return JSON.stringify({
+         code: data.code,
+         token: userSession.userState.token,
+      });
+   };
+   const convertData1 = (data: { email: string }) => {
+      return JSON.stringify({
+         renew: true,
+         email: userSession.userState.user.email,
+      });
    };
 
    const sendData = async (dataToSend: { code: number }) => {
@@ -169,8 +177,11 @@ export default function Container() {
          const data = await res.json();
 
          if (res.ok) {
-            dispachServer({ type: REQUEST_ACTION_TYPE.SUCCESS });
             saveSession(data.session);
+            dispachServer({
+               type: REQUEST_ACTION_TYPE.SUCCESS,
+               payload: "Акаунт підтверджено",
+            });
             userSession.authDisp("LOGIN", data.session);
             navigate(`/balance`, { replace: true });
          } else {
@@ -203,7 +214,7 @@ export default function Container() {
    };
    const handleRenew = () => {
       const renew = true;
-      const email = session.user.email;
+      const email = userSession.userState.user.email;
       if (typeof email === "string" && signupConfirmForm.validateAll()) {
          sendRequest({ renew, email });
       } else {
@@ -219,17 +230,19 @@ export default function Container() {
       dispachServer({ type: REQUEST_ACTION_TYPE.PROGRESS });
 
       try {
-         const res = await fetch(
-            `http://localhost:4000/signup-confirm?renew=true&email=${session.user.email}`,
-            {
-               method: "GET",
-            }
-         );
+         const res = await fetch(`http://localhost:4000/signup-confirm/renew`, {
+            method: "Post",
+            headers: { "Content-Type": "application/json" },
+            body: convertData1(dataToSend),
+         });
 
          const data = await res.json();
 
          if (res.ok) {
-            dispachServer({ type: REQUEST_ACTION_TYPE.SUCCESS });
+            dispachServer({
+               type: REQUEST_ACTION_TYPE.SUCCESS,
+               payload: "Код оновлено",
+            });
          } else {
             dispachServer({
                type: REQUEST_ACTION_TYPE.ERROR,
