@@ -22,6 +22,50 @@ const PrivateRoute = ({ children }: JSX.ElementType | any) => {
    const user = useContext(AuthContext);
    const user1: User = user.userState;
 
+   const token = user1.token;
+
+   useEffect(() => {
+      if (token) {
+         sendRequest(token, user1.user.email);
+      } else {
+         console.log("null");
+         // user.authDisp("LOGOUT");
+      }
+   }, []);
+
+   const convertData = (token: string, email: string) => {
+      return JSON.stringify({
+         token: token,
+         email: email,
+      });
+   };
+
+   const sendRequest = async (token: string, email: string) => {
+      try {
+         const res = await fetch("http://localhost:4000/auth-confirm", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: convertData(token, email),
+         });
+
+         const data = await res.json();
+
+         if (res.ok) {
+            console.log("ok");
+            return true;
+         } else {
+            console.log(data.message, "error");
+            user.authDisp("LOGOUT");
+         }
+      } catch (error) {
+         const message = "Не можливо підключитись";
+
+         console.log(message);
+
+         user.authDisp("LOGOUT");
+      }
+   };
+
    if (
       user1.token &&
       !user1.user.isConfirm &&

@@ -9,20 +9,10 @@ const { Session } = require('../class/session')
 
 User.create({
   email: 'admin1@admin.com',
-  password: '123',
+  password: '123Admin',
 })
-User.create({
-  email: 'admin2@admin.com',
-  password: '123',
-})
-User.create({
-  email: 'admin3@admin.com',
-  password: '123',
-})
-User.create({
-  email: 'admin4@admin.com',
-  password: '123',
-})
+const user = User.getByEmail('admin1@admin.com')
+user.isConfirm = true
 // ================================================================
 
 router.post('/signup', function (req, res) {
@@ -121,7 +111,7 @@ router.post('/recovery-confirm', function (req, res) {
 
     user.password = password
 
-    console.log(user)
+    // console.log(user)
     const session = Session.create(user)
 
     return res.status(200).json({
@@ -146,6 +136,13 @@ router.post('/signup-confirm/renew', function (req, res) {
   }
 
   try {
+    const userData = User.getByEmail(email)
+
+    if (!userData) {
+      return res.status(400).json({
+        message: 'Помилка. Користувача не існує',
+      })
+    }
     Confirm.create(email)
 
     return res.status(200).json({
@@ -161,7 +158,7 @@ router.post('/signup-confirm/renew', function (req, res) {
 router.post('/signup-confirm', function (req, res) {
   const { code, token } = req.body
 
-  console.log(code, token)
+  // console.log(code, token)
 
   if (!code || !token) {
     return res.status(400).json({
@@ -171,7 +168,7 @@ router.post('/signup-confirm', function (req, res) {
 
   try {
     const session = Session.get(token)
-    console.log(session)
+    // console.log(session)
 
     if (!session) {
       return res.status(400).json({
@@ -181,7 +178,7 @@ router.post('/signup-confirm', function (req, res) {
 
     const email = Confirm.getData(Number(code))
 
-    console.log(email)
+    // console.log(email)
 
     if (!email) {
       return res.status(400).json({
@@ -212,7 +209,7 @@ router.post('/signup-confirm', function (req, res) {
 // =============================================
 router.post('/auth-confirm', function (req, res) {
   const { token, email } = req.body
-  console.log(token, email)
+  // console.log(token, email)
 
   if (!email || !token) {
     return res.status(400).json({
@@ -222,14 +219,14 @@ router.post('/auth-confirm', function (req, res) {
 
   try {
     const session = Session.get(token)
-    console.log('serverAuth', session)
+    // console.log('serverAuth', session)
 
     if (!session) {
       return res.status(400).json({
         message: 'Помилка. Токен відсутній в системі',
       })
     }
-    console.log(session.user.email)
+    // console.log(session.user.email)
     const userData = User.getByEmail(email)
 
     if (!userData) {
@@ -258,7 +255,7 @@ router.post('/auth-confirm', function (req, res) {
 
 router.post('/signin', function (req, res) {
   let { email, password } = req.body
-  console.debug(req.body)
+  // console.debug(req.body)
 
   if (!email || !password) {
     return res.status(400).json({
@@ -294,5 +291,81 @@ router.post('/signin', function (req, res) {
     })
   }
 })
+
+//=====================================================
+router.post('/change-password', function (req, res) {
+  const { email, password, password_new } = req.body
+  console.log(email, password, password_new)
+  if (!email || !password || !password_new) {
+    return res.status(400).json({
+      message: "Помилка. Обов'язкові поля відсутні",
+    })
+  }
+
+  try {
+    const user = User.getByEmail(email)
+
+    if (!user) {
+      return res.status(400).json({
+        message:
+          'Помилка. Користувач з таким email не існує',
+      })
+    }
+    if (user.password === password) {
+      console.log(true)
+      user.password = password_new
+    }
+
+    // console.log(user)
+    const session = Session.create(user)
+
+    return res.status(200).json({
+      message: 'Пароль змінено',
+      session,
+    })
+
+    // ...
+  } catch (error) {
+    return res.status(400).json({ message: error.message })
+  }
+})
+//=====================================================
+router.post('/change-email', function (req, res) {
+  const { user_email, email, password } = req.body
+
+  if (!user_email || !email || !password) {
+    return res.status(400).json({
+      message: "Помилка. Обов'язкові поля відсутні",
+    })
+  }
+
+  try {
+    const user = User.getByEmail(user_email)
+
+    if (!user) {
+      return res.status(400).json({
+        message:
+          'Помилка. Користувач з таким email не існує',
+      })
+    }
+    if (user.password === password) {
+      // console.log(true)
+      user.email = email
+    }
+
+    // console.log(user)
+    const session = Session.create(user)
+
+    return res.status(200).json({
+      message: 'Пароль змінено',
+      session,
+    })
+
+    // ...
+  } catch (error) {
+    return res.status(400).json({ message: error.message })
+  }
+})
+
 // Підключаємо роутер до бек-енду
 module.exports = router

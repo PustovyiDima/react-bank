@@ -1,10 +1,10 @@
 import "./index.css";
-import React from "react";
+import React, { useContext } from "react";
 
 import Grid from "../../component/grid";
 import BackBtn from "../../component/back-button";
 import Field from "../../component/field";
-import FieldPassword from "../../component/field-password";
+import FieldMoney from "../../component/field-money";
 import Title from "../../component/title";
 import Button from "../../component/button";
 import Alert from "../../component/alert";
@@ -15,32 +15,28 @@ import { saveSession } from "../../utils/session";
 import { Form, REG_EXP_EMAIL, REG_EXP_PASSWORD } from "../../utils/form";
 
 import {
-   stateSaerverReduser,
+   stateServerReduser,
    requestInitialState,
    REQUEST_ACTION_TYPE,
 } from "../../utils/serverReducer";
+import { AuthContext } from "../../App";
+import { Loader } from "../../component/sceleton";
+const TRANSACTION_TYPE = {
+   SEND: "send",
+   RECEIVE: "receive",
+};
 
-// import {
-//    requestInitialState,
-//    requestReducer,
-//    REQUEST_ACTION_TYPE,
-// } from "../../utils/request";
-
-class SignUpForm extends Form {
+class SendForm extends Form {
    FIELD_NAME = {
       EMAIL: "email",
-      PASSWORD: "password",
-      // PASSWORD_AGAIN: "password_again",
+      SUMM: "summ",
    };
 
    FIELD_ERROR = {
       IS_EMPTY: "Введіть значення в поле",
       IS_BIG: "Занадто довге значення. Пориберіть зайве",
       EMAIL: "Значення e-mail адреси введене не коректно",
-      PASSWORD:
-         "Пароль повинен складатись не менше ніж з 8 символів, включаючи малі та Великі літери (Aa-Zz) та цифри(1-9)",
-      PASSWORD_AGAIN:
-         "Паролі не співпадають, перевірте коректність введення паролю",
+      IS_MINUS: "Значення повинно бути більше нуля",
    };
 
    validate = (name: string, value: any): string | undefined => {
@@ -55,27 +51,42 @@ class SignUpForm extends Form {
             return this.FIELD_ERROR.EMAIL;
          }
       }
-      if (name === this.FIELD_NAME.PASSWORD) {
-         if (!REG_EXP_PASSWORD.test(String(value)))
-            return this.FIELD_ERROR.PASSWORD;
+      if (name === this.FIELD_NAME.SUMM && Number(value) < 0) {
+         return this.FIELD_ERROR.IS_MINUS;
       }
-      // if (name === this.FIELD_NAME.PASSWORD_AGAIN) {
-      //    if (String(value) !== this.values[this.FIELD_NAME.PASSWORD])
-      //       return this.FIELD_ERROR.PASSWORD_AGAIN;
-      // }
       return undefined;
    };
+
+   checkDisabled = () => {
+      let disabled = false;
+
+      Object.values(this.FIELD_NAME).forEach((name) => {
+         if (this.error[name] || this.values[name] === undefined) {
+            disabled = true;
+         }
+
+         const el = document.querySelector(`.button`);
+
+         if (el) {
+            el.classList.toggle("button--disabled", Boolean(disabled));
+         }
+
+         this.disabled = disabled;
+      });
+
+      this.disabled = disabled;
+   };
 }
-const signUpForm = new SignUpForm();
+const sendForm = new SendForm();
 
 type InitialState = {
-   names: { email: ""; password: "" };
-   errors: { email: ""; password: "" };
+   names: { email: ""; summ: null };
+   errors: { email: ""; summ: "" };
 };
 
 type State = {
-   names: { email: string | null; password: string | null };
-   errors: { email: string | undefined; password: string | undefined };
+   names: { email: string | null; summ: number | null };
+   errors: { email: string | undefined; summ: string | undefined };
 };
 
 type Action = {
@@ -86,7 +97,7 @@ type Action = {
 
 enum ACTION_TYPE {
    CHANGE_EMAIL = "CHANGE_EMAIL",
-   CHANGE_PASSWORD = "CHANGE_PASSWORD",
+   CHANGE_SUMM = "CHANGE_SUMM",
 
    VALIDATE_ALL = "VALIDATE_ALL",
    SUBMIT = "SUBMIT",
@@ -103,17 +114,17 @@ const stateReducer: React.Reducer<State, Action> = (
 
    switch (action.type) {
       case ACTION_TYPE.CHANGE_EMAIL:
-         signUpForm.change("email", value);
+         sendForm.change("email", value);
          errors.email = error;
          names.email = value;
          return { ...state, names: names, errors: errors };
-      case ACTION_TYPE.CHANGE_PASSWORD:
-         signUpForm.change("password", value);
-         errors.password = error;
-         names.password = value;
+      case ACTION_TYPE.CHANGE_SUMM:
+         sendForm.change("summ", value);
+         errors.summ = error;
+         names.summ = value;
          return { ...state, names: names, errors: errors };
       case ACTION_TYPE.VALIDATE_ALL:
-         const res: boolean = signUpForm.validateAll();
+         const res: boolean = sendForm.validateAll();
          console.log(res);
 
          console.log("errors", errors);
@@ -129,14 +140,14 @@ const stateReducer: React.Reducer<State, Action> = (
 export default function Container() {
    const navigate = useNavigate();
    const initState: InitialState = {
-      names: { email: "", password: "" },
-      errors: { email: "", password: "" },
+      names: { email: "", summ: null },
+      errors: { email: "", summ: "" },
    };
 
    const initializer = (state: InitialState): State => ({
       ...state,
-      names: { email: "", password: "" },
-      errors: { email: "", password: "" },
+      names: { email: "", summ: null },
+      errors: { email: "", summ: "" },
    });
 
    const [state, dispach] = React.useReducer(
@@ -148,12 +159,12 @@ export default function Container() {
    const handleInput: React.ChangeEventHandler<HTMLInputElement> | undefined = (
       e
    ) => {
-      console.log(e.target.name, e.target.value);
-      let error: string | undefined = signUpForm.validate(
+      // console.log(e.target.name, e.target.value);
+      let error: string | undefined = sendForm.validate(
          e.target.name,
          e.target.value
       );
-      console.log(error);
+      // console.log(error);
       if (e.target.name === "email") {
          dispach({
             type: ACTION_TYPE.CHANGE_EMAIL,
@@ -161,38 +172,46 @@ export default function Container() {
             error: error,
          });
       }
-      if (e.target.name === "password") {
+      if (e.target.name === "summ") {
          dispach({
-            type: ACTION_TYPE.CHANGE_PASSWORD,
+            type: ACTION_TYPE.CHANGE_SUMM,
             payload: e.target.value,
             error: error,
          });
       }
    };
 
-   React.useEffect(() => {
-      // console.log(state);
-      // const { errors, names } = state;
-      signUpForm.validateAll();
-      signUpForm.checkDisabled();
-   }, [state]);
-
    const [stateServer, dispachServer] = React.useReducer(
-      stateSaerverReduser,
+      stateServerReduser,
       requestInitialState
    );
 
    // ==========
 
-   const convertData = (data: { email: string; password: string }) => {
-      return JSON.stringify({ email: data.email, password: data.password });
+   const convertData = (data: {
+      id: number;
+      type: string;
+      target: string;
+      summ: number;
+   }) => {
+      return JSON.stringify({
+         id: data.id,
+         type: data.type,
+         target: data.target,
+         summ: data.summ,
+      });
    };
-
-   const sendData = async (dataToSend: { email: string; password: string }) => {
+   let context = useContext(AuthContext);
+   const sendData = async (dataToSend: {
+      id: number;
+      type: string;
+      target: string;
+      summ: number;
+   }) => {
       dispachServer({ type: REQUEST_ACTION_TYPE.PROGRESS });
 
       try {
-         const res = await fetch("http://localhost:4000/signup", {
+         const res = await fetch("http://localhost:4000/send", {
             method: "POST",
             headers: {
                "Content-Type": "application/json",
@@ -207,16 +226,13 @@ export default function Container() {
 
             dispachServer({
                type: REQUEST_ACTION_TYPE.SUCCESS,
-               payload: message,
+               message: message,
             });
-            saveSession(data.session);
-
-            const user = data.session.user.email;
-            navigate(`/signup-confirm/:${user}`);
+            navigate(`/balance`);
          } else {
             dispachServer({
                type: REQUEST_ACTION_TYPE.ERROR,
-               payload: data.message,
+               message: data.message,
             });
             console.log("error");
          }
@@ -224,36 +240,44 @@ export default function Container() {
          const message = "Не можливо підключитись";
          dispachServer({
             type: REQUEST_ACTION_TYPE.ERROR,
-            payload: message,
+            message: message,
          });
          console.log("send-error");
       }
    };
 
    const handleSubmit = () => {
-      const { email, password } = state.names;
+      const { email, summ } = state.names;
+      console.log(email, summ);
 
-      if (
-         typeof email === "string" &&
-         typeof password === "string" &&
-         signUpForm.validateAll()
-      ) {
-         sendData({ email, password });
+      if (typeof email === "string" && summ !== null && summ > 0) {
+         console.log(
+            context.userState.user.id,
+            TRANSACTION_TYPE.SEND,
+            email,
+            summ
+         );
+         sendData({
+            id: context.userState.user.id,
+            type: TRANSACTION_TYPE.SEND,
+            target: email,
+            summ: summ,
+         });
       }
    };
+
+   React.useEffect(() => {
+      sendForm.validateAll();
+      sendForm.checkDisabled();
+   }, [state]);
 
    return (
       <section className="form-section">
          <div style={{ padding: "10px 20px 22px" }}>
-            <BackBtn />
+            <BackBtn title="Send" />
          </div>
 
          <div style={{ display: "grid", gap: "32px" }}>
-            <Title
-               title={"Sign up"}
-               text={"Choose a registration method"}
-            ></Title>
-
             <div className="form">
                <div className="form__item">
                   <Field
@@ -263,26 +287,25 @@ export default function Container() {
                      name="email"
                      placeholder="yourmail@mail.com"
                      error={state.errors.email}
+                     id={"field-0015"}
                   />
                </div>
                <div className="form__item">
-                  <FieldPassword
+                  <FieldMoney
                      action={handleInput}
-                     label="Password"
-                     type="password"
-                     name="password"
-                     error={state.errors.password}
+                     label="SUMM"
+                     type="number"
+                     name="summ"
+                     error={state.errors.summ}
+                     id={"field-0016"}
                   />
                </div>
 
-               <span className="link__prefix">
-                  Already have an account?
-                  <Link to="/signin" className="link">
-                     Sign In
-                  </Link>
-               </span>
+               <Button onClick={handleSubmit}>SEND</Button>
 
-               <Button onClick={handleSubmit}>Continue</Button>
+               {stateServer.status === REQUEST_ACTION_TYPE.PROGRESS && (
+                  <Loader />
+               )}
 
                {stateServer.status && (
                   <Alert

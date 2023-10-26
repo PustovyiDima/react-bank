@@ -15,11 +15,12 @@ import { saveSession } from "../../utils/session";
 import { Form, REG_EXP_EMAIL, REG_EXP_PASSWORD } from "../../utils/form";
 
 import {
-   stateSaerverReduser,
+   stateServerReduser,
    requestInitialState,
    REQUEST_ACTION_TYPE,
 } from "../../utils/serverReducer";
 import { AuthContext } from "../../App";
+import { Loader } from "../../component/sceleton";
 
 class SignUpForm extends Form {
    FIELD_NAME = {
@@ -167,7 +168,7 @@ export default function Container() {
    }, [state]);
 
    const [stateServer, dispachServer] = React.useReducer(
-      stateSaerverReduser,
+      stateServerReduser,
       requestInitialState
    );
 
@@ -196,7 +197,7 @@ export default function Container() {
 
             dispachServer({
                type: REQUEST_ACTION_TYPE.SUCCESS,
-               payload: message,
+               message: message,
             });
             saveSession(data.session);
             userSession.authDisp("LOGIN", data.session);
@@ -209,7 +210,7 @@ export default function Container() {
          } else {
             dispachServer({
                type: REQUEST_ACTION_TYPE.ERROR,
-               payload: data.message,
+               message: data.message,
             });
             console.log("error");
          }
@@ -217,7 +218,7 @@ export default function Container() {
          const message = "Не можливо підключитись";
          dispachServer({
             type: REQUEST_ACTION_TYPE.ERROR,
-            payload: message,
+            message: message,
          });
          console.log("send-error");
       }
@@ -242,10 +243,7 @@ export default function Container() {
          </div>
 
          <div style={{ display: "grid", gap: "32px" }}>
-            <Title
-               title={"Sign up"}
-               text={"Choose a registration method"}
-            ></Title>
+            <Title title={"Sign in"} text={"Select login method"}></Title>
 
             <div className="form">
                <div className="form__item">
@@ -256,6 +254,7 @@ export default function Container() {
                      name="email"
                      placeholder="yourmail@mail.com"
                      error={state.errors.email}
+                     id={"field-0008"}
                   />
                </div>
                <div className="form__item">
@@ -265,6 +264,7 @@ export default function Container() {
                      type="password"
                      name="password"
                      error={state.errors.password}
+                     id={"field-0009"}
                   />
                </div>
 
@@ -276,6 +276,10 @@ export default function Container() {
                </span>
 
                <Button onClick={handleSubmit}>Continue</Button>
+
+               {stateServer.status === REQUEST_ACTION_TYPE.PROGRESS && (
+                  <Loader />
+               )}
 
                {stateServer.status && (
                   <Alert

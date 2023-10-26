@@ -8,6 +8,7 @@ type ComponentProps = {
    placeholder?: string;
    action?: React.ChangeEventHandler<HTMLInputElement>;
    error?: string | undefined;
+   id: string | number;
 };
 const Component: React.FC<ComponentProps> = ({
    name,
@@ -16,16 +17,17 @@ const Component: React.FC<ComponentProps> = ({
    placeholder,
    action,
    error,
+   id,
 }) => {
    return (
       <div>
          <div className="field">
-            <label className="field__label" htmlFor={`${name}`}>
+            <label className="field__label" htmlFor={`${id}`}>
                {label}
             </label>
             <input
                name={name}
-               id={name}
+               id={`${id}`}
                className="field__input validation"
                type={type}
                placeholder={placeholder}

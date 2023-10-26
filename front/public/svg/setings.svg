@@ -1,0 +1,12 @@
+<svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="bell-ringing">
+<g id="Group 1">
+<line id="Line 1" x1="3.20166" y1="6.57349" x2="5.70166" y2="6.57349" stroke="#F3F5FF" stroke-width="1.5" stroke-linecap="round"/>
+<line id="Line 4" x1="21.7017" y1="17.0735" x2="19.2017" y2="17.0735" stroke="#F3F5FF" stroke-width="1.5" stroke-linecap="round"/>
+<line id="Line 3" x1="12.2017" y1="6.57349" x2="21.7017" y2="6.57349" stroke="#F3F5FF" stroke-width="1.5" stroke-linecap="round"/>
+<line id="Line 5" x1="12.7017" y1="17.0735" x2="3.20166" y2="17.0735" stroke="#F3F5FF" stroke-width="1.5" stroke-linecap="round"/>
+</g>
+<circle id="Ellipse 2" cx="8.95166" cy="6.82349" r="2.75" stroke="#F3F5FF" stroke-width="1.5"/>
+<circle id="Ellipse 3" cx="3.5" cy="3.5" r="2.75" transform="matrix(-1 0 0 1 19.4517 13.3235)" stroke="#F3F5FF" stroke-width="1.5"/>
+</g>
+</svg>

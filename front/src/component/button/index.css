@@ -27,3 +27,16 @@
    opacity: 0.5;
    cursor: default;
 }
+
+.button--danger {
+   background-color: transparent;
+   color: red;
+   transition-property: color background-color;
+   transition-duration: 1s;
+   border: 1px solid red;
+}
+
+.button--danger:hover {
+   background: red;
+   color: #fff;
+}

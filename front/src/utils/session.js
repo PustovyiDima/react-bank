@@ -45,7 +45,7 @@ export const getSession = () => {
    }
 };
 
-export const removeSession = (session) => {
+export const removeSession = () => {
    try {
       return localStorage.removeItem(SESSION_KEY);
    } catch (error) {

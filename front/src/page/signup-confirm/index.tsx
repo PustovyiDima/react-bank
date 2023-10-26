@@ -20,11 +20,12 @@ import {
 import { Form, REG_EXP_EMAIL, REG_EXP_PASSWORD } from "../../utils/form";
 
 import {
-   stateSaerverReduser,
+   stateServerReduser,
    requestInitialState,
    REQUEST_ACTION_TYPE,
 } from "../../utils/serverReducer";
 import { AuthContext } from "../../App";
+import { Loader } from "../../component/sceleton";
 
 class SignupConfirmForm extends Form {
    FIELD_NAME = {
@@ -100,9 +101,9 @@ export default function Container() {
    //    navigate("/balance");
    // }
 
-   console.log(session, "session");
+   // console.log(session, "session");
 
-   console.log(userSession, "userSession");
+   // console.log(userSession, "userSession");
 
    const initState: InitialState = {
       code: null,
@@ -145,7 +146,7 @@ export default function Container() {
    }, [state]);
 
    const [stateServer, dispachServer] = React.useReducer(
-      stateSaerverReduser,
+      stateServerReduser,
       requestInitialState
    );
 
@@ -180,14 +181,14 @@ export default function Container() {
             saveSession(data.session);
             dispachServer({
                type: REQUEST_ACTION_TYPE.SUCCESS,
-               payload: "Акаунт підтверджено",
+               message: "Акаунт підтверджено",
             });
             userSession.authDisp("LOGIN", data.session);
             navigate(`/balance`, { replace: true });
          } else {
             dispachServer({
                type: REQUEST_ACTION_TYPE.ERROR,
-               payload: data.message,
+               message: data.message,
             });
             userSession.authDisp("LOGOUT");
             console.log(data.message, "error");
@@ -196,7 +197,7 @@ export default function Container() {
          const message = "Не можливо підключитись";
          dispachServer({
             type: REQUEST_ACTION_TYPE.ERROR,
-            payload: message,
+            message: message,
          });
          console.log("send-error");
       }
@@ -205,7 +206,7 @@ export default function Container() {
 
    const handleSubmit = () => {
       const code = state.code;
-      console.log(code != null);
+      // console.log(code != null);
       if (code != null && signupConfirmForm.validateAll()) {
          sendData({ code });
       } else {
@@ -241,12 +242,12 @@ export default function Container() {
          if (res.ok) {
             dispachServer({
                type: REQUEST_ACTION_TYPE.SUCCESS,
-               payload: "Код оновлено",
+               message: "Код оновлено",
             });
          } else {
             dispachServer({
                type: REQUEST_ACTION_TYPE.ERROR,
-               payload: data.message,
+               message: data.message,
             });
             console.log("error");
          }
@@ -254,7 +255,7 @@ export default function Container() {
          const message = "Не можливо підключитись";
          dispachServer({
             type: REQUEST_ACTION_TYPE.ERROR,
-            payload: message,
+            message: message,
          });
          console.log("send-error");
       }
@@ -265,6 +266,8 @@ export default function Container() {
          <div style={{ padding: "10px 20px 22px" }}>
             <BackBtn />
          </div>
+
+         {stateServer.status === REQUEST_ACTION_TYPE.PROGRESS && <Loader />}
 
          <div style={{ display: "grid", gap: "32px" }}>
             <Title
@@ -280,11 +283,12 @@ export default function Container() {
                      type="number"
                      name="code"
                      error={state.errors.code}
+                     id={"field-0013"}
                   />
                </div>
 
                <span className="link__prefix">
-                  Already have an account?
+                  Lost code?
                   <span onClick={handleRenew} className="link" id="renew">
                      Send again
                   </span>

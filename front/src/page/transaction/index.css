@@ -1,0 +1,48 @@
+.transaction-page {
+   padding-bottom: 20px;
+   display: flex;
+   flex-direction: column;
+   justify-content: flex-start;
+   margin: auto;
+   gap: 34px;
+   min-height: 400px;
+}
+
+.transaction-item {
+   display: flex;
+   flex-direction: column;
+   gap: 38px;
+   padding: 0 20px;
+}
+
+.transaction-item__summ {
+   color: #000;
+   font-family: "Jost";
+   font-size: 38px;
+   font-style: normal;
+   font-weight: 600;
+   line-height: 100%;
+   text-align: center;
+}
+.transaction-item__summ__recive {
+   color: #24b277;
+}
+
+.transaction-item__summ__send {
+   color: #000;
+}
+
+.transaction-item__info {
+   display: flex;
+   justify-content: space-between;
+}
+
+.transaction-item__info span {
+   color: #1d1d1f;
+   text-align: center;
+   font-family: "Jost";
+   font-size: 14px;
+   font-style: normal;
+   font-weight: 400;
+   line-height: 100%;
+}

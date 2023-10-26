@@ -1,0 +1,9 @@
+.page {
+   padding-bottom: 20px;
+   display: flex;
+   flex-direction: column;
+   justify-content: flex-start;
+   margin: auto;
+   gap: 20px;
+   min-height: 400px;
+}

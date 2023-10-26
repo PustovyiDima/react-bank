@@ -6,6 +6,7 @@ import {
    useCallback,
    useMemo,
    useEffect,
+   lazy,
 } from "react";
 import {
    BrowserRouter,
@@ -16,27 +17,31 @@ import {
    useNavigate,
    Navigate,
 } from "react-router-dom";
-import WelcomePage from "./container/welcome";
-import SignupPage from "./container/signUp";
-import SignupConfirmPage from "./container/signup-confirm";
-import SignInPage from "./container/signin";
-import SignInConfirmPage from "./container/signUp";
-import BalancePage from "./page/balance";
-import RecoveryPage from "./container/recovery";
-import RecoveryConfirmPage from "./container/recovery-confirm";
-import AuthRoute from "./utils/authRouteComp";
-import PrivateRoute from "./utils/privateRouteComp";
-import { SESSION_KEY, getSession, getTokenSession } from "./utils/session";
+
+import { SESSION_KEY, getSession } from "./utils/session";
 
 import "./App.css";
-import { render } from "@testing-library/react";
+import WelcomePage from "./page/welcome";
+import SignupPage from "./page/signUp";
+import SignupConfirmPage from "./page/signup-confirm";
+import SignInPage from "./page/signin";
+import BalancePage from "./page/balance";
+import RecoveryPage from "./page/recovery";
+import RecoveryConfirmPage from "./page/recovery-confirm";
+import AuthRoute from "./utils/authRouteComp";
+import PrivateRoute from "./utils/privateRouteComp";
+import NotificationsPage from "./page/notification";
+import SettingsPage from "./page/settings";
+import RecivePage from "./page/receive";
+import SendPage from "./page/send";
+import TransactionPage from "./page/transaction";
 
-type InitialState = {
-   token: undefined;
+export type InitialState = {
+   token: string | undefined;
    user: {
-      email: undefined;
+      email: string | undefined;
       isConfirm: false;
-      id: undefined;
+      id: number | undefined;
    };
 };
 
@@ -71,6 +76,7 @@ const stateReducer: React.Reducer<State, Action> = (
          return { ...state, token: token, user: user };
       case ACTION_TYPE.LOGOUT:
          window.localStorage.removeItem(SESSION_KEY);
+         console.log("logout", action.payload);
          return {
             ...state,
             token: undefined,
@@ -96,6 +102,7 @@ export const AuthContext = createContext(initState);
 
 // =========================================================================
 function App() {
+   console.log("render");
    const session = getSession();
 
    const initState: InitialState = {
@@ -141,49 +148,6 @@ function App() {
       userState: userState,
       authDisp: authDisp,
    };
-   const token = null;
-   console.log(session);
-   if (session !== null) {
-      const token = session.token;
-   }
-
-   useEffect(() => {
-      if (token && token != null) {
-         sendRequest(token, session.user.email);
-      }
-   }, []);
-
-   const convertData = (token: string, email: string) => {
-      return JSON.stringify({
-         token: token,
-         email: email,
-      });
-   };
-
-   const sendRequest = async (token: string, email: string) => {
-      try {
-         const res = await fetch("http://localhost:4000/auth-confirm", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: convertData(token, email),
-         });
-
-         const data = await res.json();
-
-         if (res.ok) {
-            return true;
-         } else {
-            console.log(data.message, "error");
-            authDisp("LOGOUT");
-         }
-      } catch (error) {
-         const message = "Не можливо підключитись";
-
-         console.log(message);
-
-         authDisp("LOGOUT");
-      }
-   };
 
    return (
       <AuthContext.Provider value={authContextData}>
@@ -219,10 +183,18 @@ function App() {
                   }
                />
                <Route
-                  path="/signin-confirm/*"
+                  path="/recovery"
                   element={
                      <AuthRoute>
-                        <SignInConfirmPage />
+                        <RecoveryPage />
+                     </AuthRoute>
+                  }
+               />
+               <Route
+                  path="/recovery-confirm"
+                  element={
+                     <AuthRoute>
+                        <RecoveryConfirmPage />
                      </AuthRoute>
                   }
                />
@@ -250,7 +222,48 @@ function App() {
                      </PrivateRoute>
                   }
                />
+               <Route
+                  path="/notifications"
+                  element={
+                     <PrivateRoute>
+                        <NotificationsPage />
+                     </PrivateRoute>
+                  }
+               />
+               <Route
+                  path="/settings"
+                  element={
+                     <PrivateRoute>
+                        <SettingsPage />
+                     </PrivateRoute>
+                  }
+               />
+               <Route
+                  path="/recive"
+                  element={
+                     <PrivateRoute>
+                        <RecivePage />
+                     </PrivateRoute>
+                  }
+               />
+               <Route
+                  path="/send"
+                  element={
+                     <PrivateRoute>
+                        <SendPage />
+                     </PrivateRoute>
+                  }
+               />
+               <Route
+                  path="/transaction/:transactionId"
+                  element={
+                     <PrivateRoute>
+                        <TransactionPage />
+                     </PrivateRoute>
+                  }
+               />
             </Routes>
+            {/* <Route path="*" Component={error} /> */}
          </BrowserRouter>
       </AuthContext.Provider>
    );

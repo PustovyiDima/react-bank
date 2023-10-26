@@ -1,17 +1,19 @@
 
 type StateServerStatus = {
     status: string | null;
-    message: string | null;
-    data: {} | null;
+    message?: string | null|undefined;
+    data?: any | null;
  };
  
  type ActionStatus = {
     type: REQUEST_ACTION_TYPE;
     payload?: any;
+    message?:string
  };
+
  export const requestInitialState = {
     status: null,
-    message: null,
+    message: "",
     data: null,
  };
  
@@ -22,7 +24,7 @@ type StateServerStatus = {
     RESET = "reset",
  }
 
-export const stateSaerverReduser: React.Reducer<StateServerStatus, ActionStatus> = (
+export const stateServerReduser: React.Reducer<StateServerStatus, ActionStatus> = (
     stateServer: StateServerStatus,
     action: ActionStatus
  ): StateServerStatus => {
@@ -39,13 +41,14 @@ export const stateSaerverReduser: React.Reducer<StateServerStatus, ActionStatus>
           return {
              ...stateServer,
              status: action.type,
-             message: action.payload,
+             data: action.payload,
+             message:action.message
           };
        case REQUEST_ACTION_TYPE.ERROR:
           return {
              ...stateServer,
              status: action.type,
-             message: action.payload,
+             message: action.message,
           };
        case REQUEST_ACTION_TYPE.RESET:
           return { ...requestInitialState };

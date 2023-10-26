@@ -5,15 +5,17 @@ import { getSession } from "./session";
 
 const AuthRoute = ({ children }: any) => {
    const user = useContext(AuthContext);
-   console.log("auth", user);
+   // console.log("auth", user);
 
    useEffect(() => {
       const session = getSession();
-      console.log(session);
+      // console.log(session);
 
       if (session) {
          console.log("LOGIN", session);
          user.authDisp("LOGIN", session);
+      } else {
+         user.authDisp("LOGOUT");
       }
    }, []);
 

@@ -33,7 +33,7 @@ class Session {
     const session = new Session(user)
     this.#list.push(session)
 
-    // console.log(this.#list)
+    console.log(this.#list)
     return session
   }
 

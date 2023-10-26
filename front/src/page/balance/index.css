@@ -1,10 +1,153 @@
-.welcome-page {
+.balance-page {
    padding-bottom: 20px;
    display: flex;
    flex-direction: column;
-   justify-content: space-between;
    margin: auto;
-   gap: 80px;
-   
+   gap: 90px;
    min-height: 400px;
+}
+.card {
+   background: url("./cardbg.png");
+   background-repeat: no-repeat;
+   background-size: cover;
+   background-position: center -48px;
+   width: 100%;
+   height: 150px;
+   min-height: 150px;
+
+   padding: 8px 20px;
+   display: flex;
+   flex-direction: column;
+   justify-content: flex-start;
+   gap: 20px;
+   position: relative;
+}
+
+.balance-page__header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+}
+
+.balance-page__header__tittle {
+   color: #fff;
+   text-align: center;
+   font-family: Jost;
+   font-size: 16px;
+   font-style: normal;
+   font-weight: 400;
+   line-height: 100%;
+}
+
+.balance {
+   color: #fff;
+   text-align: center;
+   font-family: "Jost";
+   font-size: 34px;
+   font-style: normal;
+   font-weight: 600;
+   line-height: 100%; /* 34px */
+}
+
+.buttons {
+   display: flex;
+   justify-content: center;
+   gap: 12px;
+   position: absolute;
+   bottom: calc(-70px / 2);
+   left: calc(50% - 148px / 2);
+}
+
+.balance__button {
+   border-radius: 100px;
+   border: 10px solid #fff;
+   background: #5b94e9;
+   padding: 12px;
+   background-color: #5b94e9;
+}
+
+.transaction-list-item {
+   display: flex;
+   justify-content: space-between;
+   padding: 20px;
+   align-items: center;
+   cursor: pointer;
+   transition-property: opacity;
+   transition-duration: 0.7s;
+}
+.transaction-list-item:hover {
+   opacity: 0.7;
+}
+
+.transaction-list-item__logo {
+   width: 48px;
+   height: 48px;
+   padding: 15px;
+   border-radius: 100px;
+   background: #f7f7f7;
+}
+
+.transaction-list-item__title {
+   text-align: left;
+   text-transform: capitalize;
+   color: #1d1d1f;
+   text-align: center;
+   font-family: "Jost";
+   font-size: 16px;
+   font-style: normal;
+   font-weight: 500;
+   line-height: 100%; /* 16px */
+}
+
+.transaction-list-item__hero {
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
+   align-items: flex-start;
+}
+
+.transaction-list-item__info {
+   color: #939199;
+   text-align: center;
+   font-family: Jost;
+   font-size: 12px;
+   font-style: normal;
+   font-weight: 400;
+   line-height: 100%;
+   display: flex;
+   gap: 10px;
+}
+
+.transaction-list-item__info > span:last-child::before {
+   content: "";
+   width: 2px;
+   height: 2px;
+   background-color: #939199;
+   border-radius: 2px;
+   display: inline-block;
+   margin: 0px 8px 4px 0px;
+}
+
+.transaction__summ {
+   color: #353535;
+   text-align: center;
+   font-family: Jost;
+   font-size: 16px;
+   font-style: normal;
+   font-weight: 500;
+   line-height: 100%; /* 16px */
+}
+
+.transaction__summ--recive {
+   color: #24b277;
+}
+
+.transaction__summ--send {
+   color: #000;
+}
+
+.transactions-list {
+   width: 100%;
+   max-height: 400px;
+   overflow-y: scroll;
 }

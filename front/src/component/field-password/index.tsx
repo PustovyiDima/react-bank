@@ -7,6 +7,7 @@ type ComponentProps = {
    type: string;
    action?: React.ChangeEventHandler<HTMLInputElement>;
    error: string | undefined;
+   id: string | number;
 };
 const Component: React.FC<ComponentProps> = ({
    name,
@@ -14,6 +15,7 @@ const Component: React.FC<ComponentProps> = ({
    type,
    action,
    error,
+   id,
 }) => {
    const [viewPassword, setPassword] = React.useState<boolean>(false);
 
@@ -35,16 +37,16 @@ const Component: React.FC<ComponentProps> = ({
    return (
       <div>
          <div className="field">
-            <label className="field__label" htmlFor={`${name}`}>
+            <label className="field__label" htmlFor={`${id}`}>
                {label}
             </label>
             <div className="field__wrapper">
                <input
                   name={name}
-                  id={name}
                   className="field__input validation"
                   type={toogleType}
                   onChange={action}
+                  id={`${id}`}
                />
                <span
                   onClick={handleToggle}
