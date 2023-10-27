@@ -126,7 +126,24 @@ export default function NotificationsPage() {
                         }) => (
                            <Fragment key={item.id}>
                               <div className="notification-item">
-                                 <div className="notification-item__logo"></div>
+                                 <div className="notification-item__logo">
+                                    {item.type === NOTIFIC_TYPE.WARNING && (
+                                       <img
+                                          src="/svg/Danger.svg"
+                                          alt="warning"
+                                          width={20}
+                                          height={20}
+                                       />
+                                    )}
+                                    {item.type === NOTIFIC_TYPE.INFO && (
+                                       <img
+                                          src="/svg/bellnotific.svg"
+                                          alt="info"
+                                          width={20}
+                                          height={20}
+                                       />
+                                    )}
+                                 </div>
                                  <div className="notification-item__hero">
                                     <p className="notification-item__title">
                                        {item.text}

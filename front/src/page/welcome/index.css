@@ -5,7 +5,7 @@
    justify-content: space-between;
    margin: auto;
    gap: 80px;
-
+   overflow: hidden;
    min-height: 400px;
 }
 

@@ -17,6 +17,7 @@
 .notification-item {
    padding: 16px;
    display: flex;
+   align-items: center;
 }
 .notification-item__logo {
    width: 48px;
