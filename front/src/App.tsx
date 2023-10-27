@@ -35,6 +35,7 @@ import SettingsPage from "./page/settings";
 import RecivePage from "./page/receive";
 import SendPage from "./page/send";
 import TransactionPage from "./page/transaction";
+import ErrorPage from "./container/error";
 
 export type InitialState = {
    token: string | undefined;
@@ -72,11 +73,11 @@ const stateReducer: React.Reducer<State, Action> = (
       case ACTION_TYPE.LOGIN:
          const token = action.payload.token;
          const user = action.payload.user;
-         console.log("logIn", action.payload);
+         // console.log("logIn", action.payload);
          return { ...state, token: token, user: user };
       case ACTION_TYPE.LOGOUT:
          window.localStorage.removeItem(SESSION_KEY);
-         console.log("logout", action.payload);
+         // console.log("logout", action.payload);
          return {
             ...state,
             token: undefined,
@@ -102,7 +103,7 @@ export const AuthContext = createContext(initState);
 
 // =========================================================================
 function App() {
-   console.log("render");
+   // console.log("render");
    const session = getSession();
 
    const initState: InitialState = {
@@ -133,7 +134,7 @@ function App() {
 
    const authDisp = useCallback(
       (type: string, session?: InitialState) => {
-         console.log(type, type === ACTION_TYPE.LOGIN);
+         // console.log(type, type === ACTION_TYPE.LOGIN);
          if (type === ACTION_TYPE.LOGIN) {
             dispach({ type: ACTION_TYPE.LOGIN, payload: session });
          }
@@ -171,8 +172,12 @@ function App() {
                   }
                />
                <Route
-                  path="/signup-confirm/*"
-                  element={<PrivateRoute>{<SignupConfirmPage />}</PrivateRoute>}
+                  path="/signup-confirm"
+                  element={
+                     <PrivateRoute>
+                        <SignupConfirmPage />
+                     </PrivateRoute>
+                  }
                />
                <Route
                   path="/signin"
@@ -262,8 +267,8 @@ function App() {
                      </PrivateRoute>
                   }
                />
+               <Route path="/*" element={<ErrorPage />} />
             </Routes>
-            {/* <Route path="*" Component={error} /> */}
          </BrowserRouter>
       </AuthContext.Provider>
    );

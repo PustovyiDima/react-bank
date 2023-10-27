@@ -195,6 +195,7 @@ export default function Container() {
       summ: number;
    }) => {
       return JSON.stringify({
+         token: context.userState.token,
          id: data.id,
          type: data.type,
          target: data.target,
@@ -202,6 +203,7 @@ export default function Container() {
       });
    };
    let context = useContext(AuthContext);
+
    const sendData = async (dataToSend: {
       id: number;
       type: string;
@@ -248,15 +250,9 @@ export default function Container() {
 
    const handleSubmit = () => {
       const { email, summ } = state.names;
-      console.log(email, summ);
+      // console.log(email, summ);
 
       if (typeof email === "string" && summ !== null && summ > 0) {
-         console.log(
-            context.userState.user.id,
-            TRANSACTION_TYPE.SEND,
-            email,
-            summ
-         );
          sendData({
             id: context.userState.user.id,
             type: TRANSACTION_TYPE.SEND,
@@ -293,7 +289,7 @@ export default function Container() {
                <div className="form__item">
                   <FieldMoney
                      action={handleInput}
-                     label="SUMM"
+                     label="Sum"
                      type="number"
                      name="summ"
                      error={state.errors.summ}

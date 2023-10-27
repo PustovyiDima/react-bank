@@ -80,49 +80,63 @@ export default function TransactionPage() {
    const id = Number(transactionId?.slice(1));
    const context = useContext(AuthContext);
    const user: InitialState = context.userState;
+   const token = user.token;
 
    const userId = user.user.id;
 
    const [state, dispach] = useReducer(stateServerReduser, requestInitialState);
 
-   const getData = useCallback(
-      async (userId: number, transactionId: number) => {
-         dispach({ type: REQUEST_ACTION_TYPE.PROGRESS });
+   const convertSendData = (data: {
+      token: string;
+      userId: number;
+      transactionId: number;
+   }) => {
+      return JSON.stringify({
+         token: data.token,
+         userId: data.userId,
+         transactionId: data.transactionId,
+      });
+   };
 
-         try {
-            const res = await fetch(
-               `http://localhost:4000/get-transaction-data?userId=${userId}&transactionId=${transactionId}`,
-               {
-                  method: "GET",
-               }
-            );
+   const getData = async (dataToSend: {
+      token: string;
+      userId: number;
+      transactionId: number;
+   }) => {
+      dispach({ type: REQUEST_ACTION_TYPE.PROGRESS });
 
-            const data = await res.json();
+      try {
+         const res = await fetch("http://localhost:4000/get-transaction-data", {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+            },
+            body: convertSendData(dataToSend),
+         });
+         const data = await res.json();
 
-            if (res.ok) {
-               // console.log(data);
-               dispach({
-                  type: REQUEST_ACTION_TYPE.SUCCESS,
-                  payload: convertData(data),
-               });
-            } else {
-               dispach({
-                  type: REQUEST_ACTION_TYPE.ERROR,
-                  message: data.message,
-               });
-            }
-
-            // ===
-         } catch (error) {
-            const message = "Не можливо підключитись";
+         if (res.ok) {
+            // console.log(data);
+            dispach({
+               type: REQUEST_ACTION_TYPE.SUCCESS,
+               payload: convertData(data),
+            });
+         } else {
             dispach({
                type: REQUEST_ACTION_TYPE.ERROR,
-               message: message,
+               message: data.message,
             });
          }
-      },
-      []
-   );
+
+         // ===
+      } catch (error) {
+         const message = "Не можливо підключитись";
+         dispach({
+            type: REQUEST_ACTION_TYPE.ERROR,
+            message: message,
+         });
+      }
+   };
 
    const convertData = (transactionData: {
       transaction: {
@@ -142,8 +156,8 @@ export default function TransactionPage() {
    });
 
    useEffect(() => {
-      if (userId && id) {
-         getData(userId, id);
+      if (userId && id && token) {
+         getData({ token: token, userId: userId, transactionId: id });
       }
    }, []);
 

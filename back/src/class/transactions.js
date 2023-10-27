@@ -1,12 +1,12 @@
-const TRANSACTION_TYPE = {
-  SEND: 'send',
-  RECEIVE: 'receive',
-}
-
 class Transactions {
   static #list = []
 
   static #count = 1
+
+  TRANSACTION_TYPE = {
+    SEND: 'send',
+    RECEIVE: 'receive',
+  }
 
   constructor(userid, type, target, summ) {
     this.date = new Date().getTime()

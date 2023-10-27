@@ -12,7 +12,7 @@ const AuthRoute = ({ children }: any) => {
       // console.log(session);
 
       if (session) {
-         console.log("LOGIN", session);
+         // console.log("LOGIN", session);
          user.authDisp("LOGIN", session);
       } else {
          user.authDisp("LOGOUT");

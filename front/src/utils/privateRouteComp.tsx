@@ -28,7 +28,7 @@ const PrivateRoute = ({ children }: JSX.ElementType | any) => {
       if (token) {
          sendRequest(token, user1.user.email);
       } else {
-         console.log("null");
+         // console.log("null");
          // user.authDisp("LOGOUT");
       }
    }, []);
@@ -51,16 +51,16 @@ const PrivateRoute = ({ children }: JSX.ElementType | any) => {
          const data = await res.json();
 
          if (res.ok) {
-            console.log("ok");
+            // console.log("ok");
             return true;
          } else {
-            console.log(data.message, "error");
+            // console.log(data.message, "error");
             user.authDisp("LOGOUT");
          }
       } catch (error) {
          const message = "Не можливо підключитись";
 
-         console.log(message);
+         // console.log(message);
 
          user.authDisp("LOGOUT");
       }
@@ -71,7 +71,7 @@ const PrivateRoute = ({ children }: JSX.ElementType | any) => {
       !user1.user.isConfirm &&
       window.location.pathname === "/signup-confirm"
    ) {
-      console.log("Render Children signup-confirm element");
+      // console.log("Render Children signup-confirm element");
       return <>{children}</>;
    }
    if (
@@ -79,14 +79,14 @@ const PrivateRoute = ({ children }: JSX.ElementType | any) => {
       !user1.user.isConfirm &&
       window.location.pathname !== "/signup-confirm"
    ) {
-      console.log("Navigate signup-confirm");
+      // console.log("Navigate signup-confirm");
       return <Navigate to="/signup-confirm" replace />;
    }
    if (user1.token && user1.user.isConfirm) {
-      console.log("Render Children element");
+      // console.log("Render Children element");
       return <>{children}</>;
    } else {
-      console.log("Render Children element");
+      // console.log("Render Children element");
       return <Navigate to="/" replace />;
    }
 };

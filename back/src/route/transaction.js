@@ -5,6 +5,8 @@ const router = express.Router()
 
 const { User } = require('../class/user')
 const { Transactions } = require('../class/transactions')
+const { Session } = require('../class/session')
+const { Notification } = require('../class/notification')
 
 const TRANSACTION_TYPE = {
   SEND: 'send',
@@ -42,18 +44,32 @@ User.changeBalance(1, TRANSACTION_TYPE.SEND, 100)
 User.changeBalance(1, TRANSACTION_TYPE.RECEIVE, 140)
 // const user = User.getById(1)
 const balance = User.getBalance(1)
-console.log(balance)
+// console.log(balance)
 // console.log(Transactions.getList(1))
 
-router.get('/get-user', function (req, res) {
-  const { userId } = req.query
-  if (!userId) {
+router.post('/get-user', function (req, res) {
+  const { userId, token } = req.body
+
+  if (!userId || !token) {
     return res
       .status(400)
       .json({ message: 'Відсутній ID користувача' })
   }
 
   try {
+    const session = Session.get(token)
+
+    if (!session) {
+      return req.status(400).json({
+        message: 'Відсутня авторизація',
+      })
+    }
+
+    if (userId !== session.user.id) {
+      return req.status(400).json({
+        message: 'Можливий несанкціонований вхід',
+      })
+    }
     const user = User.getById(Number(userId))
     if (!user) {
       return res
@@ -62,11 +78,11 @@ router.get('/get-user', function (req, res) {
     }
 
     const balance = User.getBalance(Number(userId))
-    console.log(balance)
+    // console.log(balance)
 
     const list = Transactions.getList(Number(userId))
 
-    console.log(list)
+    // console.log(list)
 
     return res.status(200).json({
       list: list,
@@ -79,19 +95,33 @@ router.get('/get-user', function (req, res) {
 
 // ================================================================
 
-router.get('/get-transaction-data', function (req, res) {
-  const { userId, transactionId } = req.query
-
-  if ((!userId, !transactionId)) {
+router.post('/get-transaction-data', function (req, res) {
+  const { token, userId, transactionId } = req.body
+  // console.log(token, userId, transactionId)
+  if (!token || !userId || !transactionId) {
     return res
       .status(400)
       .json({ message: 'Дані не передано' })
   }
 
   try {
+    const session = Session.get(token)
+
+    if (!session) {
+      return req.status(400).json({
+        message: 'Відсутня авторизація',
+      })
+    }
+
+    if (userId !== session.user.id) {
+      return req.status(400).json({
+        message: 'Можливий несанкціонований вхід',
+      })
+    }
+
     const user = User.getById(Number(userId))
 
-    console.log(user)
+    // console.log(user)
 
     if (!user) {
       return res.status(400).json({
@@ -102,9 +132,12 @@ router.get('/get-transaction-data', function (req, res) {
     const transaction = Transactions.getById(
       Number(transactionId),
     )
-    if (!user) {
+    // console.log(transaction)
+
+    if (userId !== transaction.userid) {
       return res.status(400).json({
-        message: 'Транзакції з таким ID не знайдено',
+        message:
+          'Транзакції користувача з таким ID  не знайдено',
       })
     }
     return res.status(200).json({
@@ -119,9 +152,9 @@ router.get('/get-transaction-data', function (req, res) {
 
 // ================================================================
 router.post('/recive', function (req, res) {
-  let { id, type, target, summ } = req.body
+  let { token, id, type, target, summ } = req.body
 
-  if (!id || !type || !target || !summ) {
+  if (!token || !id || !type || !target || !summ) {
     return req
       .status(400)
       .json({ message: 'Дані передано не вірно' })
@@ -135,6 +168,18 @@ router.post('/recive', function (req, res) {
   }
 
   try {
+    const session = Session.get(token)
+    if (!session) {
+      return req.status(400).json({
+        message: 'Відсутня авторизація',
+      })
+    }
+
+    if (id !== session.user.id) {
+      return req.status(400).json({
+        message: 'Можливий несанкціонований вхід',
+      })
+    }
     const user = User.getById(Number(id))
 
     if (!user) {
@@ -159,9 +204,9 @@ router.post('/recive', function (req, res) {
 
 // ================================================================
 router.post('/send', function (req, res) {
-  let { id, type, target, summ } = req.body
+  let { token, id, type, target, summ } = req.body
 
-  if (!id || !type || !target || !summ) {
+  if (!token || !id || !type || !target || !summ) {
     return req
       .status(400)
       .json({ message: 'Дані передано не вірно' })
@@ -175,6 +220,19 @@ router.post('/send', function (req, res) {
   }
 
   try {
+    const session = Session.get(token)
+
+    if (!session) {
+      return req.status(400).json({
+        message: 'Відсутня авторизація',
+      })
+    }
+
+    if (id !== session.user.id) {
+      return req.status(400).json({
+        message: 'Можливий несанкціонований вхід',
+      })
+    }
     const user = User.getById(Number(id))
 
     if (!user) {
@@ -182,11 +240,11 @@ router.post('/send', function (req, res) {
         message: 'Користувача з таким ID не знайдено',
       })
     }
-    // if (user.email===target) {
-    //   return res.status(400).json({
-    //     message: 'Ви не можете надіслати кошти самі собі',
-    //   })
-    // }
+    if (user.email === target) {
+      return res.status(400).json({
+        message: 'Ви не можете надіслати кошти самі собі',
+      })
+    }
 
     const balance = User.getBalance(user.id)
     if (balance < summ) {
@@ -199,6 +257,11 @@ router.post('/send', function (req, res) {
 
     Transactions.create(id, type, target, summ)
     User.changeBalance(id, type, summ)
+    Notification.create({
+      userId: id,
+      type: Notification.NOTIFIC_TYPE.INFO,
+      text: `Відправлено переказ на суму $${summ} до ${target}`,
+    })
 
     if (userReciever) {
       Transactions.create(
@@ -212,6 +275,11 @@ router.post('/send', function (req, res) {
         TRANSACTION_TYPE.RECEIVE,
         summ,
       )
+      Notification.create({
+        userId: userReciever.id,
+        type: Notification.NOTIFIC_TYPE.INFO,
+        text: `Отримано переказ від ${user.email} на суму $${summ}`,
+      })
     }
     return res.status(200).json({
       message: 'Операцію виконано',

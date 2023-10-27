@@ -6,10 +6,10 @@ import {
    REQUEST_ACTION_TYPE,
 } from "../../utils/serverReducer";
 import { saveSession } from "../../utils/session";
-import Alert from "../alert";
-import Button from "../button";
-import Field from "../field";
-import FieldPassword from "../field-password";
+import Alert from "../../component/alert";
+import Button from "../../component/button";
+import Field from "../../component/field";
+import FieldPassword from "../../component/field-password";
 import "./index.css";
 import React, { useContext, useReducer } from "react";
 
@@ -112,8 +112,8 @@ const stateReducer: React.Reducer<State, Action> = (
 };
 
 const ChangePassword: React.FC = () => {
-   const context = useContext(AuthContext);   
-   const email = context.userState.user.email
+   const context = useContext(AuthContext);
+   const email = context.userState.user.email;
 
    const [stateServer, dispachServer] = useReducer(
       stateServerReduser,
@@ -145,6 +145,7 @@ const ChangePassword: React.FC = () => {
       password_new: string;
    }) => {
       return JSON.stringify({
+         token: context.userState.token,
          email: data.email,
          password: data.password,
          password_new: data.password_new,
@@ -198,7 +199,7 @@ const ChangePassword: React.FC = () => {
 
    const handleSubmit = () => {
       const { password, password_new } = state.names;
-      
+
       if (
          typeof email === "string" &&
          typeof password === "string" &&
@@ -245,7 +246,7 @@ const ChangePassword: React.FC = () => {
                   type="password"
                   name="password"
                   error={state.errors.password}
-                  id={'field-0003'}
+                  id={"field-0003"}
                />
             </div>
             <div className="form__item">
@@ -255,7 +256,7 @@ const ChangePassword: React.FC = () => {
                   type="password"
                   name="password_new"
                   error={state.errors.password_new}
-                  id={'field-0004'}
+                  id={"field-0004"}
                />
             </div>
 

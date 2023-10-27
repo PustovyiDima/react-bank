@@ -97,13 +97,6 @@ export default function Container() {
    const navigate = useNavigate();
    let userSession = useContext(AuthContext);
    const session = getSession();
-   // if (userSession.userState.user.isConfirm) {
-   //    navigate("/balance");
-   // }
-
-   // console.log(session, "session");
-
-   // console.log(userSession, "userSession");
 
    const initState: InitialState = {
       code: null,
@@ -190,7 +183,7 @@ export default function Container() {
                type: REQUEST_ACTION_TYPE.ERROR,
                message: data.message,
             });
-            userSession.authDisp("LOGOUT");
+            // userSession.authDisp("LOGOUT");
             console.log(data.message, "error");
          }
       } catch (error) {

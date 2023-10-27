@@ -165,6 +165,7 @@ export default function RecivePage() {
       summ: number;
    }) => {
       return JSON.stringify({
+         token: context.userState.token,
          id: data.id,
          type: data.type,
          target: data.target,

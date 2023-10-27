@@ -205,7 +205,7 @@ export default function Container() {
             if (data.session.user.isConfirm) {
                navigate(`/balance`);
             } else {
-               navigate(`/signup-confirm/:${user}`);
+               navigate(`/signup-confirm`);
             }
          } else {
             dispachServer({

@@ -44,16 +44,24 @@ export default function BalancePage() {
 
    const [state, dispach] = useReducer(stateServerReduser, requestInitialState);
 
+   const convertSendData = (userId: number) => {
+      return JSON.stringify({
+         userId: userId,
+         token: user.token,
+      });
+   };
+
    const getData = useCallback(async (userId: number) => {
       dispach({ type: REQUEST_ACTION_TYPE.PROGRESS });
 
       try {
-         const res = await fetch(
-            `http://localhost:4000/get-user?userId=${userId}`,
-            {
-               method: "GET",
-            }
-         );
+         const res = await fetch("http://localhost:4000/get-user", {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+            },
+            body: convertSendData(userId),
+         });
 
          const data = await res.json();
 
@@ -91,7 +99,7 @@ export default function BalancePage() {
          getData(userId);
       }
    }, []);
-   console.log(state.data);
+   // console.log(state.data);
 
    return (
       <section className="balance-page">

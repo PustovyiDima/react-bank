@@ -4,8 +4,8 @@ import React, { useContext } from "react";
 
 import BackBtn from "../../component/back-button";
 
-import ChangeEmail from "../../component/changeEmailForm";
-import ChangePassword from "../../component/changePasswordForm";
+import ChangeEmail from "../../container/changeEmailForm";
+import ChangePassword from "../../container/changePasswordForm";
 import Button from "../../component/button";
 
 export default function SettingsPage() {

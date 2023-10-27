@@ -6,10 +6,10 @@ import {
    REQUEST_ACTION_TYPE,
 } from "../../utils/serverReducer";
 import { saveSession } from "../../utils/session";
-import Alert from "../alert";
-import Button from "../button";
-import Field from "../field";
-import FieldPassword from "../field-password";
+import Alert from "../../component/alert";
+import Button from "../../component/button";
+import Field from "../../component/field";
+import FieldPassword from "../../component/field-password";
 import "./index.css";
 import React, { useContext, useReducer } from "react";
 
@@ -145,18 +145,20 @@ const ChangeEmail: React.FC<ComponentProps> = ({ title, text }) => {
    );
 
    //  ================
+
    const convertData = (data: {
       user_email: string;
       email: string;
       password: string;
    }) => {
       return JSON.stringify({
+         token: context.userState.token,
          user_email: data.user_email,
          email: data.email,
          password: data.password,
       });
    };
-   let userSession = useContext(AuthContext);
+
    const sendData = async (dataToSend: {
       user_email: string;
       email: string;
@@ -183,7 +185,7 @@ const ChangeEmail: React.FC<ComponentProps> = ({ title, text }) => {
                message: message,
             });
             saveSession(data.session);
-            // userSession.authDisp("LOGIN", data.session);
+            context.authDisp("LOGIN", data.session);
          } else {
             dispachServer({
                type: REQUEST_ACTION_TYPE.ERROR,

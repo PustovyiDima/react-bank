@@ -89,9 +89,9 @@
 
 .transaction-list-item__title {
    text-align: left;
-   text-transform: capitalize;
+   text-transform: lowercase;
    color: #1d1d1f;
-   text-align: center;
+   /* text-align: center; */
    font-family: "Jost";
    font-size: 16px;
    font-style: normal;
