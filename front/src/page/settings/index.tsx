@@ -1,5 +1,5 @@
 import "./index.css";
-import { AuthContext, InitialState } from "../../App";
+import { AuthContext } from "../../App";
 import React, { useContext } from "react";
 
 import BackBtn from "../../component/back-button";
@@ -10,7 +10,7 @@ import Button from "../../component/button";
 
 export default function SettingsPage() {
    const context = useContext(AuthContext);
-   const user: InitialState = context.userState;
+   // const user: InitialState = context.userState;
 
    const handleLogout = () => {
       context.authDisp("LOGOUT");

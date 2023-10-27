@@ -1,16 +1,14 @@
 import "./index.css";
 import { AuthContext, InitialState } from "../../App";
-import React, { useCallback, useContext, useEffect, useReducer } from "react";
-import Button from "../../component/button";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useContext, useEffect, useReducer } from "react";
+import { useParams } from "react-router-dom";
 import BackBtn from "../../component/back-button";
-import { Sceleton, Loader } from "../../component/sceleton";
+import { Loader } from "../../component/sceleton";
 import {
    stateServerReduser,
    requestInitialState,
    REQUEST_ACTION_TYPE,
 } from "../../utils/serverReducer";
-import Alert from "../../component/alert";
 
 const TRANSACTION_TYPE = {
    SEND: "send",
@@ -75,7 +73,7 @@ const dateResive = (timestamp: number) => {
 };
 
 export default function TransactionPage() {
-   const navigate = useNavigate();
+   // const navigate = useNavigate();
    let { transactionId } = useParams();
    const id = Number(transactionId?.slice(1));
    const context = useContext(AuthContext);
@@ -159,6 +157,7 @@ export default function TransactionPage() {
       if (userId && id && token) {
          getData({ token: token, userId: userId, transactionId: id });
       }
+      // eslint-disable-next-line
    }, []);
 
    return (

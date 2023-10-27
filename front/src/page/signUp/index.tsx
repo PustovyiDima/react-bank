@@ -230,7 +230,7 @@ export default function Container() {
             console.log("render newuser");
             userSession.authDisp("LOGIN", data.session);
 
-            const user = data.session.user.email;
+            // const user = data.session.user.email;
             navigate(`/signup-confirm`, { replace: true });
          } else {
             dispachServer({

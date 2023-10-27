@@ -85,6 +85,7 @@ export default function BalancePage() {
             message: message,
          });
       }
+      // eslint-disable-next-line
    }, []);
 
    const convertData = (data: { list: any[]; balance: number }) => ({
@@ -98,8 +99,8 @@ export default function BalancePage() {
          // console.log("1");
          getData(userId);
       }
+      // eslint-disable-next-line
    }, []);
-   // console.log(state.data);
 
    return (
       <section className="balance-page">

@@ -1,13 +1,7 @@
-import {
-   useCallback,
-   useContext,
-   createElement,
-   useEffect,
-   useState,
-   useReducer,
-} from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../App";
 import { Navigate } from "react-router-dom";
+import { saveSession } from "./session";
 
 type User = {
    token: string;
@@ -31,6 +25,8 @@ const PrivateRoute = ({ children }: JSX.ElementType | any) => {
          // console.log("null");
          // user.authDisp("LOGOUT");
       }
+
+      // eslint-disable-next-line
    }, []);
 
    const convertData = (token: string, email: string) => {
@@ -52,13 +48,14 @@ const PrivateRoute = ({ children }: JSX.ElementType | any) => {
 
          if (res.ok) {
             // console.log("ok");
+            saveSession(data.session);
+            user.authDisp({ type: "LOGIN", payload: data.session });
             return true;
          } else {
-            // console.log(data.message, "error");
             user.authDisp("LOGOUT");
          }
       } catch (error) {
-         const message = "Не можливо підключитись";
+         // const message = "Не можливо підключитись";
 
          // console.log(message);
 

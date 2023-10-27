@@ -1,6 +1,6 @@
-import { useCallback, useContext, createElement, useEffect } from "react";
+import { useContext, createElement, useEffect } from "react";
 import { AuthContext } from "../App";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { getSession } from "./session";
 
 const AuthRoute = ({ children }: any) => {
@@ -17,6 +17,7 @@ const AuthRoute = ({ children }: any) => {
       } else {
          user.authDisp("LOGOUT");
       }
+      // eslint-disable-next-line
    }, []);
 
    return user.userState.token ? (

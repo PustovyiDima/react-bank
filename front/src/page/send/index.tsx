@@ -1,18 +1,15 @@
 import "./index.css";
 import React, { useContext } from "react";
 
-import Grid from "../../component/grid";
 import BackBtn from "../../component/back-button";
 import Field from "../../component/field";
 import FieldMoney from "../../component/field-money";
-import Title from "../../component/title";
 import Button from "../../component/button";
 import Alert from "../../component/alert";
 
-import { useNavigate, Link } from "react-router-dom";
-import { saveSession } from "../../utils/session";
+import { useNavigate } from "react-router-dom";
 
-import { Form, REG_EXP_EMAIL, REG_EXP_PASSWORD } from "../../utils/form";
+import { Form, REG_EXP_EMAIL } from "../../utils/form";
 
 import {
    stateServerReduser,

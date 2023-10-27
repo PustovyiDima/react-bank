@@ -1,6 +1,6 @@
 import "./index.css";
 import React, { useContext } from "react";
-import Button from "../../component/button";
+
 import { useNavigate } from "react-router-dom";
 import BackBtn from "../../component/back-button";
 import Field from "../../component/field-money";
@@ -11,7 +11,6 @@ import {
 } from "../../utils/serverReducer";
 import { AuthContext } from "../../App";
 import { Form } from "../../utils/form";
-import { type } from "os";
 import { Loader } from "../../component/sceleton";
 
 const TRANSACTION_TYPE = {
@@ -105,9 +104,7 @@ const stateReducer: React.Reducer<State, Action> = (
          return { ...state, SUMM: value, errors: errors };
 
       case ACTION_TYPE.VALIDATE_ALL:
-         const res: boolean = reciveForm.validateAll();
-         // console.log(res);
-         // console.log("errors", errors);
+         reciveForm.validateAll();
          return { ...state, errors: errors };
       default:
          return state;

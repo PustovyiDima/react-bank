@@ -1,24 +1,7 @@
-import {
-   useReducer,
-   createContext,
-   useContext,
-   createElement,
-   useCallback,
-   useMemo,
-   useEffect,
-   lazy,
-} from "react";
-import {
-   BrowserRouter,
-   Routes,
-   Route,
-   useParams,
-   Link,
-   useNavigate,
-   Navigate,
-} from "react-router-dom";
+import { useReducer, createContext, useCallback } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import { SESSION_KEY, getSession } from "./utils/session";
+import { SESSION_KEY } from "./utils/session";
 
 import "./App.css";
 import WelcomePage from "./page/welcome";
@@ -104,7 +87,7 @@ export const AuthContext = createContext(initState);
 // =========================================================================
 function App() {
    // console.log("render");
-   const session = getSession();
+   // const session = getSession();
 
    const initState: InitialState = {
       token: undefined,
@@ -131,7 +114,7 @@ function App() {
       initState,
       initializer
    );
-
+   // eslint-disable-next-line
    const authDisp = useCallback(
       (type: string, session?: InitialState) => {
          // console.log(type, type === ACTION_TYPE.LOGIN);
@@ -142,6 +125,7 @@ function App() {
             dispach({ type: ACTION_TYPE.LOGOUT });
          }
       },
+      // eslint-disable-next-line
       [userState]
    );
 

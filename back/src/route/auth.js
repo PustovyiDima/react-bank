@@ -30,7 +30,6 @@ Notification.create({
 
 router.post('/signup', function (req, res) {
   let { email, password } = req.body
-  // console.debug(req.body)
 
   if (!email || !password) {
     return res.status(400).json({
@@ -124,7 +123,6 @@ router.post('/recovery-confirm', function (req, res) {
 
     user.password = password
 
-    // console.log(user)
     const session = Session.create(user)
 
     Notification.create({
@@ -176,8 +174,6 @@ router.post('/signup-confirm/renew', function (req, res) {
 router.post('/signup-confirm', function (req, res) {
   const { code, token } = req.body
 
-  // console.log(code, token)
-
   if (!code || !token) {
     return res.status(400).json({
       message: "Помилка. Обов'язкові поля відсутні",
@@ -186,7 +182,6 @@ router.post('/signup-confirm', function (req, res) {
 
   try {
     const session = Session.get(token)
-    // console.log(session)
 
     if (!session) {
       return res.status(400).json({
@@ -195,8 +190,6 @@ router.post('/signup-confirm', function (req, res) {
     }
 
     const email = Confirm.getData(Number(code))
-
-    // console.log(email)
 
     if (!email) {
       return res.status(400).json({
@@ -233,7 +226,6 @@ router.post('/signup-confirm', function (req, res) {
 // =============================================
 router.post('/auth-confirm', function (req, res) {
   const { token, email } = req.body
-  // console.log(token, email)
 
   if (!email || !token) {
     return res.status(400).json({
@@ -243,14 +235,12 @@ router.post('/auth-confirm', function (req, res) {
 
   try {
     const session = Session.get(token)
-    // console.log('serverAuth', session)
 
     if (!session) {
       return res.status(400).json({
         message: 'Помилка. Токен відсутній в системі',
       })
     }
-    // console.log(session.user.email)
     const userData = User.getByEmail(email)
 
     if (!userData) {
@@ -279,7 +269,6 @@ router.post('/auth-confirm', function (req, res) {
 
 router.post('/signin', function (req, res) {
   let { email, password } = req.body
-  // console.debug(req.body)
 
   if (!email || !password) {
     return res.status(400).json({
@@ -325,7 +314,6 @@ router.post('/signin', function (req, res) {
 //=====================================================
 router.post('/change-password', function (req, res) {
   const { token, email, password, password_new } = req.body
-  // console.log(email, password, password_new)
   if (!token || !email || !password || !password_new) {
     return res.status(400).json({
       message: "Помилка. Обов'язкові поля відсутні",
@@ -357,7 +345,6 @@ router.post('/change-password', function (req, res) {
     }
 
     if (user.password === password) {
-      // console.log(true)
       user.password = password_new
     }
     Notification.create({
@@ -366,7 +353,6 @@ router.post('/change-password', function (req, res) {
       text: `Змінено пароль`,
     })
 
-    // console.log(user)
     const session = Session.create(user)
 
     return res.status(200).json({
@@ -420,7 +406,6 @@ router.post('/change-email', function (req, res) {
         message: 'Можливий несанкціонований вхід',
       })
     }
-    // console.log(user.password === password)
 
     if (password === user.password) {
       user.email = email
@@ -431,7 +416,6 @@ router.post('/change-email', function (req, res) {
         text: `Email змінено`,
       })
 
-      // console.log(user)
       const session = Session.create(user)
 
       return res.status(200).json({
@@ -479,9 +463,7 @@ router.post('/get-user-notification', function (req, res) {
         .status(400)
         .json({ message: 'Користувача не знайдено' })
     }
-    // console.log(userId, token)
     const list = Notification.getList(Number(userId))
-    // console.log(list)
 
     return res.status(200).json({
       list: list,

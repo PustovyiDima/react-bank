@@ -1,7 +1,6 @@
 import "./index.css";
 import React, { useContext } from "react";
 
-import Grid from "../../component/grid";
 import BackBtn from "../../component/back-button";
 import Field from "../../component/field";
 import FieldPassword from "../../component/field-password";
@@ -201,7 +200,7 @@ export default function Container() {
             });
             saveSession(data.session);
             userSession.authDisp("LOGIN", data.session);
-            const user = data.session.user.email;
+            // const user = data.session.user.email;
             if (data.session.user.isConfirm) {
                navigate(`/balance`);
             } else {

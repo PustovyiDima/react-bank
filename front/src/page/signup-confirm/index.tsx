@@ -1,23 +1,16 @@
 import "./index.css";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 
-import Grid from "../../component/grid";
 import BackBtn from "../../component/back-button";
 import Field from "../../component/field";
-import FieldPassword from "../../component/field-password";
 import Title from "../../component/title";
 import Button from "../../component/button";
 import Alert from "../../component/alert";
 
-import { useNavigate, Link, useParams } from "react-router-dom";
-import {
-   getSession,
-   getTokenSession,
-   removeSession,
-   saveSession,
-} from "../../utils/session";
+import { useNavigate } from "react-router-dom";
+import { saveSession } from "../../utils/session";
 
-import { Form, REG_EXP_EMAIL, REG_EXP_PASSWORD } from "../../utils/form";
+import { Form } from "../../utils/form";
 
 import {
    stateServerReduser,
@@ -84,9 +77,6 @@ const stateReducer: React.Reducer<State, Action> = (
          return { ...state, code: value, errors: errors };
 
       case ACTION_TYPE.VALIDATE_ALL:
-         const res: boolean = signupConfirmForm.validateAll();
-         // console.log(res);
-         // console.log("errors", errors);
          return { ...state, errors: errors };
       default:
          return state;
@@ -96,7 +86,7 @@ const stateReducer: React.Reducer<State, Action> = (
 export default function Container() {
    const navigate = useNavigate();
    let userSession = useContext(AuthContext);
-   const session = getSession();
+   // const session = getSession();
 
    const initState: InitialState = {
       code: null,

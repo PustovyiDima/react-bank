@@ -44,8 +44,6 @@ User.changeBalance(1, TRANSACTION_TYPE.SEND, 100)
 User.changeBalance(1, TRANSACTION_TYPE.RECEIVE, 140)
 // const user = User.getById(1)
 const balance = User.getBalance(1)
-// console.log(balance)
-// console.log(Transactions.getList(1))
 
 router.post('/get-user', function (req, res) {
   const { userId, token } = req.body
@@ -78,11 +76,8 @@ router.post('/get-user', function (req, res) {
     }
 
     const balance = User.getBalance(Number(userId))
-    // console.log(balance)
 
     const list = Transactions.getList(Number(userId))
-
-    // console.log(list)
 
     return res.status(200).json({
       list: list,
@@ -97,7 +92,6 @@ router.post('/get-user', function (req, res) {
 
 router.post('/get-transaction-data', function (req, res) {
   const { token, userId, transactionId } = req.body
-  // console.log(token, userId, transactionId)
   if (!token || !userId || !transactionId) {
     return res
       .status(400)
@@ -121,8 +115,6 @@ router.post('/get-transaction-data', function (req, res) {
 
     const user = User.getById(Number(userId))
 
-    // console.log(user)
-
     if (!user) {
       return res.status(400).json({
         message: 'Користувача з таким ID не знайдено',
@@ -132,7 +124,6 @@ router.post('/get-transaction-data', function (req, res) {
     const transaction = Transactions.getById(
       Number(transactionId),
     )
-    // console.log(transaction)
 
     if (userId !== transaction.userid) {
       return res.status(400).json({

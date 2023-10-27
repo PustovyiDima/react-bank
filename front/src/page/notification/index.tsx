@@ -1,11 +1,5 @@
 import "./index.css";
-import React, {
-   Fragment,
-   useCallback,
-   useContext,
-   useEffect,
-   useReducer,
-} from "react";
+import React, { Fragment, useContext, useEffect, useReducer } from "react";
 import BackBtn from "../../component/back-button";
 import { AuthContext, InitialState } from "../../App";
 import {
@@ -56,7 +50,7 @@ export default function NotificationsPage() {
       });
    };
 
-   const getData = useCallback(async (userId: number) => {
+   const getData = async (userId: number) => {
       dispach({ type: REQUEST_ACTION_TYPE.PROGRESS });
 
       try {
@@ -94,7 +88,7 @@ export default function NotificationsPage() {
             message: message,
          });
       }
-   }, []);
+   };
 
    const convertData = (data: { list: any[]; balance: number }) => ({
       list: data.list.reverse(),
@@ -105,6 +99,7 @@ export default function NotificationsPage() {
       if (userId) {
          getData(userId);
       }
+      // eslint-disable-next-line
    }, []);
 
    return (

@@ -1,6 +1,7 @@
-import React from "react";
-
+// import React from "react";
+// eslint-disable-next-line
 export const REG_EXP_EMAIL = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/);
+// eslint-disable-next-line
 export const REG_EXP_PASSWORD = new RegExp(
    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
 );

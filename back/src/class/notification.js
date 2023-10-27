@@ -22,7 +22,7 @@ class Notification {
       text,
     )
     this.#list.push(notification)
-    console.log(notification)
+
     return notification
   }
 

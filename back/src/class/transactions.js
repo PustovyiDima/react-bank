@@ -27,8 +27,6 @@ class Transactions {
     )
     this.#list.push(transaction)
 
-    // console.log(this.#list)
-
     return transaction
   }
 
