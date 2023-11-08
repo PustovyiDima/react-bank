@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/react-bank/static/css/main.c6ffaa81.css",
+    "main.js": "/react-bank/static/js/main.04853015.js",
+    "static/media/main_bcgi.png": "/react-bank/static/media/main_bcgi.d17b58595f3980ae45f6.png",
+    "static/media/cardbg.png": "/react-bank/static/media/cardbg.91218634615c7758108d.png",
+    "static/media/eye-show.svg": "/react-bank/static/media/eye-show.9265cfb7c24a9fe747fe.svg",
+    "static/media/eye-off.svg": "/react-bank/static/media/eye-off.3ac75b3598866d28d5a4.svg",
+    "index.html": "/react-bank/index.html",
+    "main.c6ffaa81.css.map": "/react-bank/static/css/main.c6ffaa81.css.map",
+    "main.04853015.js.map": "/react-bank/static/js/main.04853015.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c6ffaa81.css",
+    "static/js/main.04853015.js"
+  ]
+}
