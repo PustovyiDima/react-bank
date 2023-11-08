@@ -12,7 +12,7 @@ type User = {
    };
 };
 
-const PrivateRoute = ({ children }: JSX.ElementType | any) => {
+const PrivateRoute = ({ children }: any) => {
    const user = useContext(AuthContext);
    const user1: User = user.userState;
 
